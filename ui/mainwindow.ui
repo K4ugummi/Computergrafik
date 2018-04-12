@@ -29,7 +29,7 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item alignment="Qt::AlignVCenter">
+      <item>
        <widget class="QGroupBox" name="vbControls">
         <property name="enabled">
          <bool>true</bool>
@@ -59,7 +59,7 @@
          <item>
           <layout class="QHBoxLayout" name="hlSliders">
            <property name="sizeConstraint">
-            <enum>QLayout::SetFixedSize</enum>
+            <enum>QLayout::SetDefaultConstraint</enum>
            </property>
            <item>
             <layout class="QVBoxLayout" name="vlSlider1">
@@ -326,7 +326,7 @@
          <item>
           <widget class="QGroupBox" name="gbClipping">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -352,17 +352,32 @@
               <property name="verticalSpacing">
                <number>6</number>
               </property>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="dsbFar">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <double>10000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>100.000000000000000</double>
+                </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="2" column="0">
                <widget class="QLabel" name="labelFar">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -375,17 +390,7 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="dsbNear">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="labelNear">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -398,6 +403,31 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="dsbNear">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>2</number>
+                </property>
+                <property name="maximum">
+                 <double>10000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.100000000000000</double>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
@@ -406,7 +436,7 @@
          <item>
           <layout class="QFormLayout" name="flControlButtons">
            <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
+            <enum>QLayout::SetMaximumSize</enum>
            </property>
            <property name="fieldGrowthPolicy">
             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -417,7 +447,7 @@
            <property name="verticalSpacing">
             <number>6</number>
            </property>
-           <item row="0" column="0">
+           <item row="0" column="0" colspan="2">
             <widget class="QPushButton" name="rbReset">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -468,8 +498,31 @@
    <class>MyGLWidget</class>
    <extends>QOpenGLWidget</extends>
    <header>src/myglwidget.h</header>
+   <slots>
+    <slot>setFOV(int)</slot>
+    <slot>setAngle(int)</slot>
+    <slot>setPerspective()</slot>
+    <slot>setNear(double)</slot>
+    <slot>setFar(double)</slot>
+    <slot>setRotationA(int)</slot>
+    <slot>setRotationB(int)</slot>
+    <slot>setRotationC(int)</slot>
+   </slots>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>spFOV</tabstop>
+  <tabstop>spAngle</tabstop>
+  <tabstop>vsFOV</tabstop>
+  <tabstop>vsAngle</tabstop>
+  <tabstop>rbPerspective</tabstop>
+  <tabstop>rbOrthogonal</tabstop>
+  <tabstop>hsRotationA</tabstop>
+  <tabstop>hsRotationB</tabstop>
+  <tabstop>hsRotationC</tabstop>
+  <tabstop>dsbFar</tabstop>
+  <tabstop>rbReset</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -479,11 +532,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>84</y>
+     <x>137</x>
+     <y>87</y>
     </hint>
     <hint type="destinationlabel">
-     <x>112</x>
+     <x>120</x>
      <y>108</y>
     </hint>
    </hints>
@@ -495,12 +548,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>27</x>
+     <x>38</x>
      <y>109</y>
     </hint>
     <hint type="destinationlabel">
-     <x>27</x>
-     <y>90</y>
+     <x>61</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -511,12 +564,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>83</y>
+     <x>80</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
      <x>36</x>
-     <y>105</y>
+     <y>99</y>
     </hint>
    </hints>
   </connection>
@@ -531,8 +584,120 @@
      <y>108</y>
     </hint>
     <hint type="destinationlabel">
-     <x>136</x>
-     <y>83</y>
+     <x>157</x>
+     <y>84</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spAngle</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setAngle(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spFOV</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setFOV(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>124</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hsRotationA</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setRotationA(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>270</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>223</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hsRotationB</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setRotationB(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>123</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>272</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hsRotationC</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setRotationC(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>125</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>219</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dsbFar</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setFar(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>133</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>258</x>
+     <y>425</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dsbNear</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setNear(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>128</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>267</x>
+     <y>394</y>
     </hint>
    </hints>
   </connection>
