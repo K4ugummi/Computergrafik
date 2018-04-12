@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>683</width>
-    <height>504</height>
+    <width>690</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>CG - P1</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <item>
      <layout class="QHBoxLayout" name="vlMain">
@@ -21,7 +27,7 @@
        <number>3</number>
       </property>
       <property name="sizeConstraint">
-       <enum>QLayout::SetFixedSize</enum>
+       <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item alignment="Qt::AlignVCenter">
        <widget class="QGroupBox" name="vbControls">
@@ -33,6 +39,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
         </property>
         <property name="autoFillBackground">
          <bool>false</bool>
@@ -75,6 +87,12 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimum">
+                <number>45</number>
+               </property>
+               <property name="maximum">
+                <number>180</number>
+               </property>
               </widget>
              </item>
              <item>
@@ -84,6 +102,12 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="minimum">
+                <number>45</number>
+               </property>
+               <property name="maximum">
+                <number>180</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -118,6 +142,9 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="maximum">
+                <number>360</number>
+               </property>
               </widget>
              </item>
              <item>
@@ -127,6 +154,9 @@
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="maximum">
+                <number>360</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -140,7 +170,7 @@
          <item>
           <widget class="QGroupBox" name="gbProjection">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -155,26 +185,26 @@
             <item>
              <widget class="QRadioButton" name="rbPerspective">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="text">
-               <string>RadioButton</string>
+               <string>Perspective</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="rbOrthogonal">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="text">
-               <string>RadioButton</string>
+               <string>Orthogonal</string>
               </property>
              </widget>
             </item>
@@ -184,7 +214,7 @@
          <item>
           <widget class="QGroupBox" name="gbRotation">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -199,7 +229,7 @@
             <item>
              <layout class="QFormLayout" name="Rotations">
               <property name="sizeConstraint">
-               <enum>QLayout::SetDefaultConstraint</enum>
+               <enum>QLayout::SetMaximumSize</enum>
               </property>
               <property name="fieldGrowthPolicy">
                <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -296,7 +326,7 @@
          <item>
           <widget class="QGroupBox" name="gbClipping">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -311,7 +341,7 @@
             <item>
              <layout class="QFormLayout" name="Clipping">
               <property name="sizeConstraint">
-               <enum>QLayout::SetFixedSize</enum>
+               <enum>QLayout::SetMaximumSize</enum>
               </property>
               <property name="fieldGrowthPolicy">
                <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -325,7 +355,7 @@
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="dsbFar">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -335,7 +365,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="labelFar">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -348,7 +378,7 @@
               <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="dsbNear">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -358,7 +388,7 @@
               <item row="2" column="0">
                <widget class="QLabel" name="labelNear">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -390,7 +420,7 @@
            <item row="0" column="0">
             <widget class="QPushButton" name="rbReset">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -408,11 +438,17 @@
      </layout>
     </item>
     <item>
-     <widget class="QOpenGLWidget" name="openGLWidget">
+     <widget class="MyGLWidget" name="openGLWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
-        <width>10</width>
-        <height>0</height>
+        <width>0</width>
+        <height>480</height>
        </size>
       </property>
       <property name="baseSize">
@@ -427,6 +463,78 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyGLWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>src/myglwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>spAngle</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>vsAngle</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>112</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>112</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>vsFOV</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spFOV</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>27</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>27</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spFOV</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>vsFOV</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>36</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>vsAngle</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spAngle</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>117</x>
+     <y>108</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>83</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
