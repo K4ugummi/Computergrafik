@@ -13,12 +13,14 @@ class MainWindow : public QMainWindow {
 private:
     Ui::MainWindow *ui;
 
+    void Init();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 public slots:
-    //Reset();
+    void reset();
 };
 
 #endif // MAINWINDOW_H

@@ -193,6 +193,9 @@
               <property name="text">
                <string>Perspective</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -261,6 +264,12 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>360</number>
+                </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -273,6 +282,12 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>360</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -299,6 +314,18 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>360</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -501,12 +528,12 @@
    <slots>
     <slot>setFOV(int)</slot>
     <slot>setAngle(int)</slot>
-    <slot>setPerspective()</slot>
     <slot>setNear(double)</slot>
     <slot>setFar(double)</slot>
     <slot>setRotationA(int)</slot>
     <slot>setRotationB(int)</slot>
     <slot>setRotationC(int)</slot>
+    <slot>setProjectionMode()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -526,18 +553,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>spAngle</sender>
+   <sender>hsRotationC</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>vsAngle</receiver>
-   <slot>setValue(int)</slot>
+   <receiver>openGLWidget</receiver>
+   <slot>setRotationC(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>137</x>
-     <y>87</y>
+     <x>125</x>
+     <y>317</y>
     </hint>
     <hint type="destinationlabel">
-     <x>120</x>
-     <y>108</y>
+     <x>219</x>
+     <y>318</y>
     </hint>
    </hints>
   </connection>
@@ -554,6 +581,22 @@
     <hint type="destinationlabel">
      <x>61</x>
      <y>88</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>hsRotationB</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setRotationB(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>123</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>272</x>
+     <y>294</y>
     </hint>
    </hints>
   </connection>
@@ -600,24 +643,8 @@
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>327</x>
+     <x>299</x>
      <y>106</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spFOV</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>openGLWidget</receiver>
-   <slot>setFOV(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>42</x>
-     <y>78</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>216</x>
-     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -638,34 +665,50 @@
    </hints>
   </connection>
   <connection>
-   <sender>hsRotationB</sender>
+   <sender>spFOV</sender>
    <signal>valueChanged(int)</signal>
    <receiver>openGLWidget</receiver>
-   <slot>setRotationB(int)</slot>
+   <slot>setFOV(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>123</x>
-     <y>295</y>
+     <x>42</x>
+     <y>78</y>
     </hint>
     <hint type="destinationlabel">
-     <x>272</x>
-     <y>294</y>
+     <x>288</x>
+     <y>126</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>hsRotationC</sender>
-   <signal>valueChanged(int)</signal>
+   <sender>dsbNear</sender>
+   <signal>valueChanged(double)</signal>
    <receiver>openGLWidget</receiver>
-   <slot>setRotationC(int)</slot>
+   <slot>setNear(double)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>125</x>
-     <y>317</y>
+     <x>128</x>
+     <y>394</y>
     </hint>
     <hint type="destinationlabel">
-     <x>219</x>
-     <y>318</y>
+     <x>267</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spAngle</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>vsAngle</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>120</x>
+     <y>108</y>
     </hint>
    </hints>
   </connection>
@@ -686,18 +729,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>dsbNear</sender>
-   <signal>valueChanged(double)</signal>
+   <sender>rbPerspective</sender>
+   <signal>released()</signal>
    <receiver>openGLWidget</receiver>
-   <slot>setNear(double)</slot>
+   <slot>setProjectionMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>128</x>
-     <y>394</y>
+     <x>103</x>
+     <y>166</y>
     </hint>
     <hint type="destinationlabel">
-     <x>267</x>
-     <y>394</y>
+     <x>226</x>
+     <y>164</y>
     </hint>
    </hints>
   </connection>
