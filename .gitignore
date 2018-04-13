@@ -1,3 +1,6 @@
+# BEGIN QT.gitignore licensed under CC0 1.0 Universal
+# Source URL: https://github.com/github/gitignore/blob/master/Qt.gitignore
+# Full license at ./3rd/gitignore/LICENSE.txt
 # C++ objects and libs
 *.slo
 *.lo
@@ -41,7 +44,11 @@ target_wrapper.*
 
 # QtCreator CMake
 CMakeLists.txt.user*
+# END QT.gitignore
 
+# BEGIN CMake.gitignore licensed under CC0 1.0 Universal
+# Source URL: https://github.com/github/gitignore/blob/master/CMake.gitignore
+# Full license at ./3rd/gitignore/LICENSE.txt
 # CMake Files
 CMakeCache.txt
 CMakeFiles
@@ -52,3 +59,4 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+# END CMake.gitignore
