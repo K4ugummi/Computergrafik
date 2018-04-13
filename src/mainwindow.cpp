@@ -32,7 +32,7 @@ void MainWindow::Init() {
     qDebug("MainWindow::Init()");
 
     // Connect Signals and Slots.
-    connect(ui->pbReset, &QPushButton::released, this, &MainWindow::reset);
+    connect(ui->pbReset, &QPushButton::clicked, this, &MainWindow::reset);
 
     // Lambda functions to print slider values.
     connect(ui->vsFOV, &QSlider::valueChanged,
@@ -56,9 +56,12 @@ void MainWindow::reset() {
     qDebug("MainWindow::reset()");
 
     ui->spFOV->setValue(MYCTRL_DEF_FOV);
+    // vsFOV will be changed from spFOV signal.
     ui->spAngle->setValue(MYCTRL_DEF_ANGLE);
+    // vsAngle will be changed from spAngle signal.
 
     ui->rbPerspective->setChecked(true);
+    // rbOrthogonal will be changed from rbPerspective signal.
 
     ui->hsRotationA->setValue(MYCTRL_DEF_ROTATIONA);
     ui->hsRotationB->setValue(MYCTRL_DEF_ROTATIONB);
