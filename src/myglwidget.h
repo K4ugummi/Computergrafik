@@ -2,11 +2,14 @@
 #define MYGLWIDGET_H
 
 #include <QOpenGLWidget>
+#include <QKeyEvent>
+#include <QVector3D>
 
 class MyGLWidget : public QOpenGLWidget {
     Q_OBJECT
 
 private:
+    // UI-Control values.
     int m_FOV;
     int m_Angle;
     bool m_IsProjection;
@@ -16,7 +19,11 @@ private:
     int m_RotationB;
     int m_RotationC;
 
+    // Camera values.
+    QVector3D m_CameraPos;
+
 protected:
+    void keyPressEvent(QKeyEvent *event);
 
 public:
     MyGLWidget(QWidget * parent);
