@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CG - P1</string>
+   <string>CG SS2018 - Stephan Schauerte - 3099441</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
@@ -35,7 +35,7 @@
          <bool>true</bool>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -54,7 +54,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="sizeConstraint">
-          <enum>QLayout::SetFixedSize</enum>
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <item>
           <layout class="QHBoxLayout" name="hlSliders">
@@ -69,7 +69,7 @@
              <item>
               <widget class="QLabel" name="labelFOV">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -82,10 +82,16 @@
              <item>
               <widget class="QSpinBox" name="spFOV">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="frame">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="minimum">
                 <number>45</number>
@@ -98,10 +104,13 @@
              <item>
               <widget class="QSlider" name="vsFOV">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="cursor">
+                <cursorShape>ArrowCursor</cursorShape>
                </property>
                <property name="minimum">
                 <number>45</number>
@@ -124,7 +133,7 @@
              <item>
               <widget class="QLabel" name="labelAngle">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -137,10 +146,13 @@
              <item>
               <widget class="QSpinBox" name="spAngle">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
                </property>
                <property name="maximum">
                 <number>360</number>
@@ -150,10 +162,16 @@
              <item>
               <widget class="QSlider" name="vsAngle">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
+               </property>
+               <property name="cursor">
+                <cursorShape>ArrowCursor</cursorShape>
+               </property>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
                </property>
                <property name="maximum">
                 <number>360</number>
@@ -170,7 +188,7 @@
          <item>
           <widget class="QGroupBox" name="gbProjection">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -178,14 +196,14 @@
            <property name="title">
             <string>Projection Mode</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0">
             <property name="sizeConstraint">
-             <enum>QLayout::SetFixedSize</enum>
+             <enum>QLayout::SetDefaultConstraint</enum>
             </property>
             <item>
              <widget class="QRadioButton" name="rbPerspective">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -201,7 +219,7 @@
             <item>
              <widget class="QRadioButton" name="rbOrthogonal">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -217,7 +235,7 @@
          <item>
           <widget class="QGroupBox" name="gbRotation">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -264,6 +282,9 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
+                </property>
                 <property name="minimum">
                  <number>0</number>
                 </property>
@@ -282,6 +303,9 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
                 </property>
                 <property name="minimum">
                  <number>0</number>
@@ -314,6 +338,9 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="cursor">
+                 <cursorShape>ArrowCursor</cursorShape>
                 </property>
                 <property name="layoutDirection">
                  <enum>Qt::LeftToRight</enum>
@@ -353,7 +380,7 @@
          <item>
           <widget class="QGroupBox" name="gbClipping">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -477,7 +504,7 @@
            <item row="0" column="0" colspan="2">
             <widget class="QPushButton" name="rbReset">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -733,17 +760,33 @@
   </connection>
   <connection>
    <sender>rbPerspective</sender>
-   <signal>released()</signal>
+   <signal>clicked()</signal>
    <receiver>openGLWidget</receiver>
    <slot>setProjectionMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>103</x>
-     <y>166</y>
+     <x>102</x>
+     <y>164</y>
     </hint>
     <hint type="destinationlabel">
-     <x>226</x>
-     <y>164</y>
+     <x>232</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbOrthogonal</sender>
+   <signal>clicked()</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setProjectionMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>194</y>
     </hint>
    </hints>
   </connection>

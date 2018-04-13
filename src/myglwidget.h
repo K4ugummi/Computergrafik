@@ -1,3 +1,7 @@
+// Computergrafik Praktikum SS2018
+// Autor: Stephan Schauerte
+// Matrikelnummer: 3099441
+
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
 
