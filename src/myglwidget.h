@@ -16,7 +16,7 @@ private:
     // UI-Control values.
     int m_FOV;
     int m_Angle;
-    bool m_IsProjection;
+    bool m_IsProjPerspective;
     double m_NearClipping;
     double m_FarClipping;
     int m_RotationA;

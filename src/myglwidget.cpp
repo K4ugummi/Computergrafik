@@ -82,7 +82,6 @@ void MyGLWidget::setRotationC(int value) {
 void MyGLWidget::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Escape) {
         //qDebug("MyGLWidget::keyPressEvent(Key_Escape)");
-        // ESCAPE KEY PRESSED
     }
     else if (event->key() == Qt::Key_W || event->key() == Qt::Key_Up) {
         //qDebug("MyGLWidget::keyPressEvent(Key_W|Key_Up)");
