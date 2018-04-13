@@ -10,7 +10,7 @@
 #include <QRadioButton>
 #include <QSlider>
 
-// Default Control values.
+// Default Control values used to reset UI parameter.
 const int MYCTRL_DEF_FOV = 45;
 const int MYCTRL_DEF_ANGLE = 0;
 const bool MYCTRL_DEF_IS_PROJECTION = true;
@@ -32,7 +32,19 @@ void MainWindow::Init() {
     qDebug("MainWindow::Init()");
 
     // Connect Signals and Slots.
-    QObject::connect(ui->rbReset, SIGNAL(released()), this, SLOT(reset()));
+    connect(ui->pbReset, &QPushButton::released, this, &MainWindow::reset);
+
+    // Lambda functions to print slider values.
+    connect(ui->vsFOV, &QSlider::valueChanged,
+            [](int value){ qDebug("MainWindow::ui->vsFOV(%i)", value); });
+    connect(ui->vsAngle, &QSlider::valueChanged,
+            [](int value){ qDebug("MainWindow::ui->vsAngle(%i)", value); });
+    connect(ui->hsRotationA, &QSlider::valueChanged,
+            [](int value){ qDebug("MainWindow::ui->hsRotationA(%i)", value); });
+    connect(ui->hsRotationB, &QSlider::valueChanged,
+            [](int value){ qDebug("MainWindow::ui->hsRotationB(%i)", value); });
+    connect(ui->hsRotationC, &QSlider::valueChanged,
+            [](int value){ qDebug("MainWindow::ui->hsRotationC(%i)", value); });
 }
 
 MainWindow::~MainWindow() {
