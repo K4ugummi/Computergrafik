@@ -48,6 +48,9 @@ void MyGLWidget::setProjectionMode() {
 void MyGLWidget::setNear(double value) {
     if (m_NearClipping != value) {
         m_NearClipping = value;
+        if (m_NearClipping > m_FarClipping - 2.0f) {
+            emit adjustFar(m_NearClipping + 2.0f);
+        }
         //qDebug("MyGLWidget::setNear: %f", value);
     }
 }
@@ -55,6 +58,9 @@ void MyGLWidget::setNear(double value) {
 void MyGLWidget::setFar(double value) {
     if (m_FarClipping != value) {
         m_FarClipping = value;
+        if (m_FarClipping < m_NearClipping + 2.0f) {
+            emit adjustNear(m_FarClipping - 2.0f);
+        }
         //qDebug("MyGLWidget::setFar: %f", value);
     }
 }

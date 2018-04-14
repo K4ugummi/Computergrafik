@@ -47,6 +47,22 @@ void MainWindow::Init() {
             [](int value){ qDebug("MainWindow::ui->hsRotationC(%i)", value); });
 }
 
+void MainWindow::InitMyOGLParams() {
+    qDebug("MainWindow::InitMyOGLParams()");
+
+    ui->openGLWidget->setFOV(MYCTRL_DEF_FOV);
+    ui->openGLWidget->setAngle(MYCTRL_DEF_ANGLE);
+
+    ui->openGLWidget->setProjectionMode();
+
+    ui->openGLWidget->setRotationA(MYCTRL_DEF_ROTATIONA);
+    ui->openGLWidget->setRotationB(MYCTRL_DEF_ROTATIONB);
+    ui->openGLWidget->setRotationC(MYCTRL_DEF_ROTATIONC);
+
+    ui->openGLWidget->setNear(MYCTRL_DEF_NEARCLIPPING);
+    ui->openGLWidget->setFar(MYCTRL_DEF_FARCLIPPING);
+}
+
 MainWindow::~MainWindow() {
     delete ui;
 }
@@ -60,7 +76,7 @@ void MainWindow::reset() {
     ui->spAngle->setValue(MYCTRL_DEF_ANGLE);
     // vsAngle will be changed from spAngle signal.
 
-    ui->rbPerspective->setChecked(true);
+    ui->rbPerspective->setChecked(MYCTRL_DEF_IS_PROJECTION);
     // rbOrthogonal will be changed from rbPerspective signal.
 
     ui->hsRotationA->setValue(MYCTRL_DEF_ROTATIONA);

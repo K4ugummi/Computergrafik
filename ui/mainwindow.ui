@@ -483,6 +483,9 @@
                 <property name="decimals">
                  <number>2</number>
                 </property>
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
                 <property name="maximum">
                  <double>10000.000000000000000</double>
                 </property>
@@ -568,6 +571,8 @@
    <extends>QOpenGLWidget</extends>
    <header>src/myglwidget.h</header>
    <slots>
+    <signal>adjustNear(double)</signal>
+    <signal>adjustFar(double)</signal>
     <slot>setFOV(int)</slot>
     <slot>setAngle(int)</slot>
     <slot>setNear(double)</slot>
@@ -730,11 +735,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>128</x>
-     <y>421</y>
+     <y>426</y>
     </hint>
     <hint type="destinationlabel">
-     <x>276</x>
-     <y>421</y>
+     <x>277</x>
+     <y>426</y>
     </hint>
    </hints>
   </connection>
@@ -762,11 +767,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>133</x>
-     <y>452</y>
+     <y>445</y>
     </hint>
     <hint type="destinationlabel">
-     <x>260</x>
-     <y>452</y>
+     <x>262</x>
+     <y>445</y>
     </hint>
    </hints>
   </connection>
@@ -799,6 +804,38 @@
     <hint type="destinationlabel">
      <x>245</x>
      <y>219</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>adjustNear(double)</signal>
+   <receiver>dsbNear</receiver>
+   <slot>setValue(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>410</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>149</x>
+     <y>410</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>adjustFar(double)</signal>
+   <receiver>dsbFar</receiver>
+   <slot>setValue(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>250</x>
+     <y>465</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>147</x>
+     <y>465</y>
     </hint>
    </hints>
   </connection>
