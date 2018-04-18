@@ -14,10 +14,24 @@ const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 
 MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
     m_CameraPos = QVector3D(0.0f, 0.0f, 0.0f);
+
+    InitGL();
+}
+
+void MyGLWidget::InitGL() {
+    m_debuglogger = new QOpenGLDebugLogger(this);
+
+    connect(m_debuglogger, &QOpenGLDebugLogger::messageLogged,
+            this, &MyGLWidget::onOGLMessage);
+
+    if (m_debuglogger->initialize()) {
+        m_debuglogger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
+        m_debuglogger->enableMessages();
+    }
 }
 
 MyGLWidget::~MyGLWidget() {
-
+    delete m_debuglogger;
 }
 
 void MyGLWidget::setFOV(int value) {
@@ -111,4 +125,8 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
     }
     qDebug("MyGLWidget::m_CameraPos(%.1f, %.1f, %.1f)",
            m_CameraPos.x(), m_CameraPos.y(), m_CameraPos.z());
+}
+
+void MyGLWidget::onOGLMessage(QOpenGLDebugMessage message) {
+    qDebug() << message;
 }

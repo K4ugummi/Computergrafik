@@ -8,6 +8,8 @@
 #include <QOpenGLWidget>
 #include <QKeyEvent>
 #include <QVector3D>
+#include <QOpenGLDebugLogger>
+#include <QOpenGLDebugMessage>
 
 class MyGLWidget : public QOpenGLWidget {
     Q_OBJECT
@@ -26,6 +28,11 @@ private:
     // Camera values.
     QVector3D m_CameraPos;
 
+    // OpenGL
+    QOpenGLDebugLogger * m_debuglogger;
+
+    void InitGL();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
 
@@ -34,6 +41,7 @@ public:
     ~MyGLWidget();
 
 public slots:
+    // Slots for UI interaction.
     void setFOV(int value);
     void setAngle(int value);
     void setProjectionMode();
@@ -42,6 +50,9 @@ public slots:
     void setRotationA(int value);
     void setRotationB(int value);
     void setRotationC(int value);
+
+    // Slots for OGL signals.
+    void onOGLMessage(QOpenGLDebugMessage message);
 
 signals:
     void adjustNear(double value);
