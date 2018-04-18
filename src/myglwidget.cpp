@@ -14,7 +14,6 @@ const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 
 // Contructor of a customizable OpenGL widget.
 MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
-    m_CameraPos = QVector3D(0.0f, 0.0f, 0.0f);
 
     InitParam();
     InitGL();
@@ -22,19 +21,24 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
 
 // Initialize default parameter.
 void MyGLWidget::InitParam() {
-    m_FOV                = 45;
-    m_Angle              = 0;
+    qDebug("MyGLWidget::InitParam()");
+
+    m_FOV               = 45;
+    m_Angle             = 0;
     m_IsProjPerspective = true;
-    m_NearClipping     = 0.1f;
-    m_FarClipping      = 100.0f;
-    m_RotationA          = 0;
-    m_RotationB          = 0;
-    m_RotationC          = 0;
+    m_NearClipping      = 0.1f;
+    m_FarClipping       = 100.0f;
+    m_RotationA         = 0;
+    m_RotationB         = 0;
+    m_RotationC         = 0;
 
     m_CameraPos = QVector3D();
 }
 
+// Initialize OpenGL helper functions
 void MyGLWidget::InitGL() {
+    qDebug("MyGLWidget::InitGL()");
+
     m_debuglogger = new QOpenGLDebugLogger(this);
 
     connect(m_debuglogger, &QOpenGLDebugLogger::messageLogged,
@@ -73,6 +77,7 @@ void MyGLWidget::setProjectionMode() {
     //       stattdessen zwei Slots 'setProjPerspektive()' und
     //       'setProjOrthogonal()' benutzt um eine Membervariable
     //       'bool m_isPerspective' auf true oder false zu setzen.
+    // Kann ich so machen.
 }
 
 void MyGLWidget::setNear(double value) {
