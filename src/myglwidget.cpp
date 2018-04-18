@@ -4,6 +4,9 @@
 
 #include "myglwidget.h"
 
+#include <QSurfaceFormat>
+#include <QMetaEnum>
+
 // Normalized direction vectors.
 const QVector3D MYQV_FRONT = QVector3D(1.0f, 0.0f, 0.0f);
 const QVector3D MYQV_BACK = QVector3D(-1.0f, 0.0f, 0.0f);
@@ -48,6 +51,18 @@ void MyGLWidget::InitGL() {
         m_debuglogger->startLogging(QOpenGLDebugLogger::SynchronousLogging);
         m_debuglogger->enableMessages();
     }
+
+    QSurfaceFormat fmt = this->format();
+
+    qDebug().nospace() << "    OpenGL " << fmt.majorVersion() << "." << fmt.minorVersion();
+    qDebug().noquote() << "    Profile:"
+        << QMetaEnum::fromType<QSurfaceFormat::OpenGLContextProfile>().valueToKey(fmt.profile());
+    qDebug().noquote() << "    Options:" << QMetaEnum::fromType<QSurfaceFormat::FormatOption>().valueToKeys(fmt.options());
+    qDebug().noquote() << "    Renderable Type:"
+        << QMetaEnum::fromType<QSurfaceFormat::RenderableType>().valueToKey(fmt.renderableType());
+    qDebug().noquote() << "    Swap Behavior:"
+        << QMetaEnum::fromType<QSurfaceFormat::SwapBehavior>().valueToKey(fmt.swapBehavior());
+    qDebug() << "    Swap Interval:" << fmt.swapInterval();
 }
 
 MyGLWidget::~MyGLWidget() {
