@@ -15,15 +15,15 @@ class MyGLWidget : public QOpenGLWidget {
     Q_OBJECT
 
 private:
-    // UI-Control values   -   Defaults.
-    int m_FOV                = 45;
-    int m_Angle              = 0;
-    bool m_IsProjPerspective = true;
-    float m_NearClipping     = 0.1f;
-    float m_FarClipping      = 100.0f;
-    int m_RotationA          = 0;
-    int m_RotationB          = 0;
-    int m_RotationC          = 0;
+    // UI-Control values.
+    int m_FOV;
+    int m_Angle;
+    bool m_IsProjPerspective;
+    float m_NearClipping;
+    float m_FarClipping;
+    int m_RotationA;
+    int m_RotationB;
+    int m_RotationC;
 
     // Camera values.
     QVector3D m_CameraPos;
@@ -31,6 +31,7 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
+    void InitParam();
     void InitGL();
 
 protected:

@@ -12,10 +12,26 @@ const QVector3D MYQV_DOWN = QVector3D(0.0f, -1.0f, 0.0f);
 const QVector3D MYQV_LEFT = QVector3D(0.0f, 0.0f, -1.0f);
 const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 
+// Contructor of a customizable OpenGL widget.
 MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
     m_CameraPos = QVector3D(0.0f, 0.0f, 0.0f);
 
+    InitParam();
     InitGL();
+}
+
+// Initialize default parameter.
+void MyGLWidget::InitParam() {
+    m_FOV                = 45;
+    m_Angle              = 0;
+    m_IsProjPerspective = true;
+    m_NearClipping     = 0.1f;
+    m_FarClipping      = 100.0f;
+    m_RotationA          = 0;
+    m_RotationB          = 0;
+    m_RotationC          = 0;
+
+    m_CameraPos = QVector3D();
 }
 
 void MyGLWidget::InitGL() {
