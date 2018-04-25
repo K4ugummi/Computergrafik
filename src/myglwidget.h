@@ -5,11 +5,14 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
 
+#include "mesh.h"
+
 #include <QOpenGLWidget>
 #include <QKeyEvent>
 #include <QVector3D>
 #include <QOpenGLDebugLogger>
 #include <QOpenGLDebugMessage>
+#include <QOpenGLBuffer>
 
 class MyGLWidget : public QOpenGLWidget {
     Q_OBJECT
@@ -31,6 +34,8 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
+    Mesh mesh;
+
     void InitParam();
     void InitGL();
 
@@ -45,7 +50,8 @@ public slots:
     // Slots for UI interaction.
     void setFOV(int value);
     void setAngle(int value);
-    void setProjectionMode();
+    void setProjPerspective();
+    void setProjOrthogonal();
     void setNear(double value);
     void setFar(double value);
     void setRotationA(int value);

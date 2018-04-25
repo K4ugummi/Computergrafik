@@ -18,7 +18,6 @@ private:
     Ui::MainWindow *ui;
 
     void Init();
-    void InitMyOGLParams();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

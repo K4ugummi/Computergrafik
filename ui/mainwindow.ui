@@ -580,7 +580,8 @@
     <slot>setRotationA(int)</slot>
     <slot>setRotationB(int)</slot>
     <slot>setRotationC(int)</slot>
-    <slot>setProjectionMode()</slot>
+    <slot>setProjPerspective()</slot>
+    <slot>setProjOrthogonal()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -776,38 +777,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>rbPerspective</sender>
-   <signal>clicked()</signal>
-   <receiver>openGLWidget</receiver>
-   <slot>setProjectionMode()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>102</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>232</x>
-     <y>189</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbOrthogonal</sender>
-   <signal>clicked()</signal>
-   <receiver>openGLWidget</receiver>
-   <slot>setProjectionMode()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>102</x>
-     <y>219</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>245</x>
-     <y>219</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>openGLWidget</sender>
    <signal>adjustNear(double)</signal>
    <receiver>dsbNear</receiver>
@@ -836,6 +805,38 @@
     <hint type="destinationlabel">
      <x>147</x>
      <y>465</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbPerspective</sender>
+   <signal>clicked()</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setProjPerspective()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>115</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>221</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rbOrthogonal</sender>
+   <signal>clicked()</signal>
+   <receiver>openGLWidget</receiver>
+   <slot>setProjOrthogonal()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>111</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>224</x>
+     <y>219</y>
     </hint>
    </hints>
   </connection>

@@ -16,10 +16,13 @@ const QVector3D MYQV_LEFT = QVector3D(0.0f, 0.0f, -1.0f);
 const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 
 // Contructor of a customizable OpenGL widget.
-MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
-
+MyGLWidget::MyGLWidget(QWidget * parent)
+    : QOpenGLWidget(parent)
+{
     InitParam();
     InitGL();
+
+    mesh = Mesh();
 }
 
 // Initialize default parameter.
@@ -83,16 +86,16 @@ void MyGLWidget::setAngle(int value) {
     }
 }
 
-void MyGLWidget::setProjectionMode() {
-    //qDebug("MyGLWidget::setProjectionMode()");
-    // TODO: Wie kann ich bei einer Funktion für beide RadioButtons
-    //       unterscheiden, welcher von beiden nach einem Click
-    //       markiert wurde?
-    //       Dieser Slot wurde in der Aufgabe vorgegeben, ich haette
-    //       stattdessen zwei Slots 'setProjPerspektive()' und
-    //       'setProjOrthogonal()' benutzt um eine Membervariable
-    //       'bool m_isPerspective' auf true oder false zu setzen.
-    // Kann ich so machen.
+void MyGLWidget::setProjPerspective() {
+    if (!m_IsProjPerspective) {
+        m_IsProjPerspective = true;
+    }
+}
+
+void MyGLWidget::setProjOrthogonal() {
+    if (m_IsProjPerspective) {
+        m_IsProjPerspective = false;
+    }
 }
 
 void MyGLWidget::setNear(double value) {
