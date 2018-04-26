@@ -16,6 +16,13 @@
 #include <QOpenGLDebugMessage>
 #include <QOpenGLBuffer>
 
+#include <vector>
+
+struct Vertex {
+    GLfloat position[2];
+    GLfloat color[3];
+};
+
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_3_3_Core {
     Q_OBJECT
 
@@ -36,16 +43,19 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
+    std::vector<Vertex> m_vertices;
     GLuint m_vbo;
     GLuint m_vao;
     QOpenGLShaderProgram * m_prog;
 
-    void InitParam();
+    void initParam();
+    void initGLDebugger();
+
+protected:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
 
-protected:
     void keyPressEvent(QKeyEvent *event);
 
 public:

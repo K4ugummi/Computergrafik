@@ -4,8 +4,8 @@
 
 #include "myglwidget.h"
 
-#include <QSurfaceFormat>
 #include <QMetaEnum>
+#include <QSurfaceFormat>
 
 // Normalized direction vectors.
 const QVector3D MYQV_FRONT = QVector3D(1.0f, 0.0f, 0.0f);
@@ -19,12 +19,11 @@ const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 MyGLWidget::MyGLWidget(QWidget * parent)
     : QOpenGLWidget(parent)
 {
-    InitParam();
-
+    initParam();
 }
 
 // Initialize default parameter.
-void MyGLWidget::InitParam() {
+void MyGLWidget::initParam() {
     qDebug("MyGLWidget::InitParam()");
 
     m_FOV               = 45;
@@ -41,27 +40,33 @@ void MyGLWidget::InitParam() {
 
 // Initialize OpenGL helper functions
 void MyGLWidget::initializeGL() {
-    qDebug("MyGLWidget::InitGL()");
-    bool success = initializeOpenGLFunctions(); // Funktion gibt bool zurück, bitte abfragen!
+    qDebug("MyGLWidget::initializeGL()");
+    initGLDebugger();
+
+    bool success = initializeOpenGLFunctions();
     Q_ASSERT(success);
+    Q_UNUSED(success);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    static GLfloat coord[] = {
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.0f, 0.5f,
-    };
+    m_vertices.push_back(Vertex { -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, });
+    m_vertices.push_back(Vertex { 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, });
+    m_vertices.push_back(Vertex { 0.0f, 0.5f, 0.0f, 0.0f, 1.0f, });
+
+#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
 
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(coord), coord, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), &m_vertices.front(), GL_STATIC_DRAW);
 
-    const void * offset = reinterpret_cast<const void*>(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*2, offset);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
 
     glEnableVertexAttribArray(0);
 
@@ -74,8 +79,11 @@ void MyGLWidget::initializeGL() {
 
     Q_ASSERT(m_prog->isLinked());
 
+#undef OFS
 
+}
 
+void MyGLWidget::initGLDebugger() {
     m_debuglogger = new QOpenGLDebugLogger(this);
 
     connect(m_debuglogger, &QOpenGLDebugLogger::messageLogged,
@@ -119,12 +127,11 @@ MyGLWidget::~MyGLWidget() {
     makeCurrent();
 
     delete m_prog;
-
     glDeleteVertexArrays(1, &m_vao);
     glDeleteBuffers(1, &m_vbo);
 
+    delete m_debuglogger;
     doneCurrent();
-    //delete m_debuglogger;
 }
 
 void MyGLWidget::setFOV(int value) {

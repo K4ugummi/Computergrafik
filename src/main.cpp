@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QSurfaceFormat format;
     format.setVersion(3, 3);
-    format.setProfile(QSurfaceFormat::CompatibilityProfile);
+    format.setProfile(QSurfaceFormat::CoreProfile);
     format.setOption(QSurfaceFormat::DeprecatedFunctions);
     format.setOption(QSurfaceFormat::DebugContext);
     QSurfaceFormat::setDefaultFormat(format);
