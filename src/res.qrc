@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>shader/sample.frag</file>
         <file>shader/sample.vert</file>
+        <file>textures/sample_texture.jpg</file>
     </qresource>
 </RCC>
