@@ -49,6 +49,9 @@ void MyGLWidget::initializeGL() {
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     m_vertices.push_back(Vertex { -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, });
     m_vertices.push_back(Vertex { 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, });
     m_vertices.push_back(Vertex { 0.0f, 0.5f, 0.0f, 0.0f, 1.0f, });
@@ -78,6 +81,8 @@ void MyGLWidget::initializeGL() {
     m_prog->link();
 
     Q_ASSERT(m_prog->isLinked());
+
+    //m_prog->setUniformValue(0, 0.2f);
 
 #undef OFS
 
@@ -115,6 +120,8 @@ void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindVertexArray(m_vao);
+
+    m_prog->setUniformValue(0, (float)m_RotationA/360.0f);
     m_prog->bind();
 
     //später glDrawElements()
