@@ -49,3 +49,6 @@ FORMS += \
 
 DISTFILES += \
     CMakeLists.txt
+
+RESOURCES += \
+    src/res.qrc

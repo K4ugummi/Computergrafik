@@ -20,9 +20,7 @@ MyGLWidget::MyGLWidget(QWidget * parent)
     : QOpenGLWidget(parent)
 {
     InitParam();
-    InitGL();
 
-    mesh = Mesh();
 }
 
 // Initialize default parameter.
@@ -42,8 +40,41 @@ void MyGLWidget::InitParam() {
 }
 
 // Initialize OpenGL helper functions
-void MyGLWidget::InitGL() {
+void MyGLWidget::initializeGL() {
     qDebug("MyGLWidget::InitGL()");
+    bool success = initializeOpenGLFunctions(); // Funktion gibt bool zurück, bitte abfragen!
+    Q_ASSERT(success);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    static GLfloat coord[] = {
+        -0.5f, -0.5f,
+        0.5f, -0.5f,
+        0.0f, 0.5f,
+    };
+
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
+
+    glGenBuffers(1, &m_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(coord), coord, GL_STATIC_DRAW);
+
+    const void * offset = reinterpret_cast<const void*>(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*2, offset);
+
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+
+    m_prog = new QOpenGLShaderProgram();
+    m_prog->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
+    m_prog->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample.frag");
+    m_prog->link();
+
+    Q_ASSERT(m_prog->isLinked());
+
+
 
     m_debuglogger = new QOpenGLDebugLogger(this);
 
@@ -68,8 +99,32 @@ void MyGLWidget::InitGL() {
     qDebug() << "    Swap Interval:" << fmt.swapInterval();
 }
 
+void MyGLWidget::resizeGL(int width, int height) {
+
+}
+
+void MyGLWidget::paintGL() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindVertexArray(m_vao);
+    m_prog->bind();
+
+    //später glDrawElements()
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    update();
+}
+
 MyGLWidget::~MyGLWidget() {
-    delete m_debuglogger;
+    makeCurrent();
+
+    delete m_prog;
+
+    glDeleteVertexArrays(1, &m_vao);
+    glDeleteBuffers(1, &m_vbo);
+
+    doneCurrent();
+    //delete m_debuglogger;
 }
 
 void MyGLWidget::setFOV(int value) {

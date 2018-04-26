@@ -7,6 +7,8 @@
 
 #include "mesh.h"
 
+#include <QOpenGLShaderProgram>
+#include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLWidget>
 #include <QKeyEvent>
 #include <QVector3D>
@@ -14,7 +16,7 @@
 #include <QOpenGLDebugMessage>
 #include <QOpenGLBuffer>
 
-class MyGLWidget : public QOpenGLWidget {
+class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_3_3_Core {
     Q_OBJECT
 
 private:
@@ -34,10 +36,14 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
-    Mesh mesh;
+    GLuint m_vbo;
+    GLuint m_vao;
+    QOpenGLShaderProgram * m_prog;
 
     void InitParam();
-    void InitGL();
+    void initializeGL();
+    void resizeGL(int width, int height);
+    void paintGL();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
