@@ -8,6 +8,8 @@
 #include <QSurfaceFormat>
 #include <QImage>
 
+#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
+
 // Normalized direction vectors.
 const QVector3D MYQV_FRONT = QVector3D(1.0f, 0.0f, 0.0f);
 const QVector3D MYQV_BACK = QVector3D(-1.0f, 0.0f, 0.0f);
@@ -48,21 +50,22 @@ void MyGLWidget::initializeGL() {
     Q_ASSERT(success);
     Q_UNUSED(success);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // TRIANGLE                   POSITION          COLOR               UV-COORDS
-    m_vertices.push_back(Vertex { -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,   0.25f, 0.25f });
-    m_vertices.push_back(Vertex { 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,   0.75f, 0.25f });
-    m_vertices.push_back(Vertex { 0.0f, 0.5f,       0.0f, 0.0f, 1.0f,   0.5f, 0.75f });
+    m_vertices.push_back(Vertex { -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,   0.25f, 0.25f, });
+    m_vertices.push_back(Vertex { 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,   0.75f, 0.25f, });
+    m_vertices.push_back(Vertex { 0.0f, 0.5f,       0.0f, 0.0f, 1.0f,   0.5f, 0.75f, });
+    m_vertices.push_back(Vertex { 1.0f, 0.5f,       1.0f, 1.0f, 1.0f,   1.0f, 0.75f, });
+
+    GLuint data[] = { 0, 1, 2, 2, 1, 3, };
 
     QImage img;
     img.load(":/textures/sample_texture.jpg");
     Q_ASSERT(!img.isNull());
-
-#define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
     // VAO BIND
     glGenVertexArrays(1, &m_vao);
@@ -82,27 +85,38 @@ void MyGLWidget::initializeGL() {
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, uv));
 
-    // VAO UNBIND
-    glBindVertexArray(0);
-
     // TEX BIND
     glGenTextures(1, &m_tex);
-    glBindTexture(GL_TEXTURE, m_tex);
+    glBindTexture(GL_TEXTURE_2D, m_tex);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.width(), img.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // IBO
+    glGenBuffers(1, &m_ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+    // VAO UNBIND
+    glBindVertexArray(0);
+
     m_prog = new QOpenGLShaderProgram();
     m_prog->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
     m_prog->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample.frag");
     m_prog->link();
 
+    m_prog_texture = new QOpenGLShaderProgram();
+    m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
+    m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample_texture.frag");
+    m_prog_texture->link();
+
     Q_ASSERT(m_prog->isLinked());
-
-#undef OFS
-
+    Q_ASSERT(m_prog_texture->isLinked());
 }
 
 void MyGLWidget::initGLDebugger() {
@@ -138,13 +152,22 @@ void MyGLWidget::paintGL() {
 
     glBindVertexArray(m_vao);
 
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-
     m_prog->bind();
     m_prog->setUniformValue(0, (float)m_RotationA/360.0f);
 
-    //später glDrawElements()
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+
+    m_prog_texture->bind();
+    m_prog_texture->setUniformValue(0, (float)m_RotationA/360.0f);
+    m_prog_texture->setUniformValue(1, (float)m_RotationB/360.0f);
+    m_prog_texture->setUniformValue(2, (float)m_RotationC/360.0f);
+    m_prog_texture->setUniformValue(7, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_tex);
+
+    void * const offset = reinterpret_cast<void * const>(sizeof(GLuint)*3);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
 
     update();
 }

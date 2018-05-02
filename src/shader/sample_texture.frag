@@ -11,6 +11,6 @@ layout(location = 0) uniform float uAlpha;
 layout(location = 7) uniform sampler2D tex0;
 
 void main() {
+    fragColor = texture(tex0, vUV);
     fragColor.w = uAlpha;
-    fragColor = vec4(vColor, uAlpha);
 }

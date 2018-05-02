@@ -45,11 +45,15 @@ private:
     QOpenGLDebugLogger * m_debuglogger;
 
     std::vector<Vertex> m_vertices;
+    std::vector<GLuint> m_indices;
+
     GLuint m_vbo;
     GLuint m_vao;
     QOpenGLShaderProgram * m_prog;
+    QOpenGLShaderProgram * m_prog_texture;
 
     GLuint m_tex;
+    GLuint m_ibo;
 
     void initParam();
     void initGLDebugger();
