@@ -21,6 +21,7 @@
 struct Vertex {
     GLfloat position[2];
     GLfloat color[3];
+    GLfloat uv[2];
 };
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_3_3_Core {
@@ -47,6 +48,8 @@ private:
     GLuint m_vbo;
     GLuint m_vao;
     QOpenGLShaderProgram * m_prog;
+
+    GLuint m_tex;
 
     void initParam();
     void initGLDebugger();
