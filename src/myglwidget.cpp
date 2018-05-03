@@ -56,56 +56,6 @@ void MyGLWidget::initializeGL() {
     glEnable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // TRIANGLE                   POSITION          COLOR               UV-COORDS
-    m_vertices.push_back(Vertex { -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,   0.25f, 0.25f, });
-    m_vertices.push_back(Vertex { 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,   0.75f, 0.25f, });
-    m_vertices.push_back(Vertex { 0.0f, 0.5f,       0.0f, 0.0f, 1.0f,   0.5f, 0.75f, });
-    m_vertices.push_back(Vertex { 1.0f, 0.5f,       1.0f, 1.0f, 1.0f,   1.0f, 0.75f, });
-
-    GLuint data[] = { 0, 1, 2, 2, 1, 3, };
-
-    QImage img;
-    img.load(":/textures/sample_texture.jpg");
-    Q_ASSERT(!img.isNull());
-
-    // VAO BIND
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
-
-    // VBO BIND
-    glGenBuffers(1, &m_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), &m_vertices.front(), GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, position));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, color));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, uv));
-
-    // TEX BIND
-    glGenTextures(1, &m_tex);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.width(), img.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    // IBO
-    glGenBuffers(1, &m_ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-    // VAO UNBIND
-    glBindVertexArray(0);
-
     m_prog = new QOpenGLShaderProgram();
     m_prog->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
     m_prog->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample.frag");
@@ -115,6 +65,10 @@ void MyGLWidget::initializeGL() {
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample_texture.frag");
     m_prog_texture->link();
+
+    Mesh * mesh = new Mesh();
+    mesh->setProgram(m_prog);
+    m_meshes.push_back(mesh);
 
     Q_ASSERT(m_prog->isLinked());
     Q_ASSERT(m_prog_texture->isLinked());
@@ -151,32 +105,9 @@ void MyGLWidget::resizeGL(int width, int height) {
 void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glBindVertexArray(m_vao);
-
-    QMatrix4x4 rotMat;
-    QVector3D axis = QVector3D(0, 1, 0);
-
-    rotMat.rotate(m_RotationB, axis);
-
-    m_prog->bind();
-    m_prog->setUniformValue(0, (float)m_RotationA/360.0f);
-    m_prog->setUniformValue(3, rotMat);
-
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-
-    m_prog_texture->bind();
-    m_prog_texture->setUniformValue(0, (float)m_RotationA/360.0f);
-    m_prog_texture->setUniformValue(1, (float)m_RotationB/360.0f);
-    m_prog_texture->setUniformValue(2, (float)m_RotationC/360.0f);
-    m_prog_texture->setUniformValue(7, 0);
-    m_prog->setUniformValue(3, rotMat);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
-
-    void * const offset = reinterpret_cast<void * const>(sizeof(GLuint)*3);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, offset);
-
+    for (uint i=0; i<m_meshes.size(); i++) {
+        m_meshes[i]->draw();
+    }
     update();
 }
 
@@ -184,9 +115,10 @@ MyGLWidget::~MyGLWidget() {
     makeCurrent();
 
     delete m_prog;
-    glDeleteTextures(1, &m_tex);
-    glDeleteVertexArrays(1, &m_vao);
-    glDeleteBuffers(1, &m_vbo);
+
+    for(uint i = 0; i < m_meshes.size(); i++) {
+        delete m_meshes[i];
+    }
 
     delete m_debuglogger;
     doneCurrent();
@@ -241,21 +173,27 @@ void MyGLWidget::setFar(double value) {
 void MyGLWidget::setRotationA(int value) {
     if (m_RotationA != value) {
         m_RotationA = value;
-        //qDebug("MyGLWidget::setRotationA: %i", value);
+        for (uint i = 0; i < m_meshes.size(); i++) {
+            m_meshes[i]->rotate((float)value, QVector3D(1, 0, 0));
+        }
     }
 }
 
 void MyGLWidget::setRotationB(int value) {
     if (m_RotationB != value) {
         m_RotationB = value;
-        //qDebug("MyGLWidget::setRotationB: %i", value);
+        for (uint i = 0; i < m_meshes.size(); i++) {
+            m_meshes[i]->rotate((float)value, QVector3D(0, 1, 0));
+        }
     }
 }
 
 void MyGLWidget::setRotationC(int value) {
     if (m_RotationC != value) {
         m_RotationC = value;
-        //qDebug("MyGLWidget::setRotationC: %i", value);
+        for (uint i = 0; i < m_meshes.size(); i++) {
+            m_meshes[i]->rotate((float)value, QVector3D(0, 0, 1));
+        }
     }
 }
 

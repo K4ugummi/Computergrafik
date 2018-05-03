@@ -11,18 +11,11 @@
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLWidget>
 #include <QKeyEvent>
-#include <QVector3D>
 #include <QOpenGLDebugLogger>
 #include <QOpenGLDebugMessage>
 #include <QOpenGLBuffer>
 
 #include <vector>
-
-struct Vertex {
-    GLfloat position[2];
-    GLfloat color[3];
-    GLfloat uv[2];
-};
 
 class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_3_3_Core {
     Q_OBJECT
@@ -44,11 +37,8 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
-    std::vector<Vertex> m_vertices;
-    std::vector<GLuint> m_indices;
+    std::vector<Mesh*> m_meshes;
 
-    GLuint m_vbo;
-    GLuint m_vao;
     QOpenGLShaderProgram * m_prog;
     QOpenGLShaderProgram * m_prog_texture;
 
