@@ -53,6 +53,7 @@ void MyGLWidget::initializeGL() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
     glEnable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // TRIANGLE                   POSITION          COLOR               UV-COORDS
@@ -152,8 +153,14 @@ void MyGLWidget::paintGL() {
 
     glBindVertexArray(m_vao);
 
+    QMatrix4x4 rotMat;
+    QVector3D axis = QVector3D(0, 1, 0);
+
+    rotMat.rotate(m_RotationB, axis);
+
     m_prog->bind();
     m_prog->setUniformValue(0, (float)m_RotationA/360.0f);
+    m_prog->setUniformValue(3, rotMat);
 
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
@@ -162,6 +169,7 @@ void MyGLWidget::paintGL() {
     m_prog_texture->setUniformValue(1, (float)m_RotationB/360.0f);
     m_prog_texture->setUniformValue(2, (float)m_RotationC/360.0f);
     m_prog_texture->setUniformValue(7, 0);
+    m_prog->setUniformValue(3, rotMat);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);

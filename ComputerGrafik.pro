@@ -38,11 +38,13 @@ win32 {
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/myglwidget.cpp
+    src/myglwidget.cpp \
+    src/mesh.cpp
 
 HEADERS += \
     src/mainwindow.h \
-    src/myglwidget.h
+    src/myglwidget.h \
+    src/mesh.h
 
 FORMS += \
     ui/mainwindow.ui

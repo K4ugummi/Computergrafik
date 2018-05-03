@@ -11,6 +11,7 @@ layout(location = 1) out vec2 vUV;
 
 layout(location = 1) uniform float offsetX;
 layout(location = 2) uniform float offsetY;
+layout(location = 3) uniform mat4x4 uRotationMat;
 
 void main() {
     vColor = aColor;
@@ -19,5 +20,5 @@ void main() {
 
     //vColor = texture(tex0, vUV);
 
-    gl_Position = vec4(aPosition, 0.0f, 1.0f);
+    gl_Position = uRotationMat * vec4(aPosition, 0.0f, 1.0f);
 }
