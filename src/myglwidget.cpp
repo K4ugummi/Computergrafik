@@ -107,8 +107,12 @@ void MyGLWidget::resizeGL(int width, int height) {
 void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    QMatrix4x4 mvp;
-    mvp.perspective(m_Angle, m_width / m_height, m_Near, m_Far);
+    QMatrix4x4 proj;
+    proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
+    QMatrix4x4 view;
+    view.lookAt(QVector3D(0,0,-4), QVector3D(0,0,0), QVector3D(0,1,0));
+
+    QMatrix4x4 mvp = proj * view;
     m_prog->setUniformValue(0, mvp);
 
     for (uint i=0; i<m_meshes.size(); i++) {
