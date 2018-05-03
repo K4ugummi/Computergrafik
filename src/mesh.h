@@ -5,6 +5,8 @@
 #ifndef MY_MESH_H
 #define MY_MESH_H
 
+#include "modelloaderh.h"
+
 #include <vector>
 
 #include <QOpenGLShaderProgram>
@@ -12,8 +14,8 @@
 #include <QImage>
 
 struct Vertex {
-    GLfloat position[2];
-    GLfloat color[3];
+    GLfloat position[3];
+    GLfloat normal[3];
     GLfloat uv[2];
 };
 

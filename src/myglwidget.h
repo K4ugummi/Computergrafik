@@ -25,11 +25,10 @@ private:
     int m_FOV;
     int m_Angle;
     bool m_IsProjPerspective;
-    float m_NearClipping;
-    float m_FarClipping;
-    int m_RotationA;
-    int m_RotationB;
-    int m_RotationC;
+    float m_Near, m_Far;
+    float m_RotationA, m_RotationB, m_RotationC;
+
+    int m_width, m_height;
 
     // Camera values.
     QVector3D m_CameraPos;
@@ -41,9 +40,6 @@ private:
 
     QOpenGLShaderProgram * m_prog;
     QOpenGLShaderProgram * m_prog_texture;
-
-    GLuint m_tex;
-    GLuint m_ibo;
 
     void initParam();
     void initGLDebugger();

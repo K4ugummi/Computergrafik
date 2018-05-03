@@ -44,7 +44,8 @@ SOURCES += \
 HEADERS += \
     src/mainwindow.h \
     src/myglwidget.h \
-    src/mesh.h
+    src/mesh.h \
+    src/modelloaderh.h
 
 FORMS += \
     ui/mainwindow.ui

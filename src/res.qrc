@@ -4,5 +4,7 @@
         <file>shader/sample.vert</file>
         <file>textures/sample_texture.jpg</file>
         <file>shader/sample_texture.frag</file>
+        <file>models/gimbal.obj</file>
+        <file>models/sphere.obj</file>
     </qresource>
 </RCC>

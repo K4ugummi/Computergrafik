@@ -7,10 +7,8 @@ layout(location = 1) in vec2 vUV;
 
 layout(location = 0) out vec4 fragColor;
 
-layout(location = 0) uniform float uAlpha;
 layout(location = 7) uniform sampler2D tex0;
 
 void main() {
-    fragColor.w = uAlpha;
-    fragColor = vec4(vColor, uAlpha);
+    fragColor = vec4(vColor, 1.0f);
 }

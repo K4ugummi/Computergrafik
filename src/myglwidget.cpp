@@ -29,14 +29,14 @@ MyGLWidget::MyGLWidget(QWidget * parent)
 void MyGLWidget::initParam() {
     qDebug("MyGLWidget::InitParam()");
 
-    m_FOV               = 45;
-    m_Angle             = 0;
+    m_FOV               = 45.0f;
+    m_Angle             = 0.0f;
     m_IsProjPerspective = true;
-    m_NearClipping      = 0.1f;
-    m_FarClipping       = 100.0f;
-    m_RotationA         = 0;
-    m_RotationB         = 0;
-    m_RotationC         = 0;
+    m_Near              = 0.1f;
+    m_Far               = 100.0f;
+    m_RotationA         = 0.0f;
+    m_RotationB         = 0.0f;
+    m_RotationC         = 0.0f;
 
     m_CameraPos = QVector3D();
 }
@@ -99,11 +99,17 @@ void MyGLWidget::initGLDebugger() {
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
-
+    m_width = width;
+    m_height = height;
+    qDebug("Width: %i - Height %i", m_width, m_height);
 }
 
 void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    QMatrix4x4 mvp;
+    mvp.perspective(m_Angle, m_width / m_height, m_Near, m_Far);
+    m_prog->setUniformValue(0, mvp);
 
     for (uint i=0; i<m_meshes.size(); i++) {
         m_meshes[i]->draw();
@@ -125,75 +131,53 @@ MyGLWidget::~MyGLWidget() {
 }
 
 void MyGLWidget::setFOV(int value) {
-    if (m_FOV != value) {
-        m_FOV = value;
-        //qDebug("MyGLWidget::setFOV: %i", value);
-    }
+    m_FOV = (float)value;
 }
 
 void MyGLWidget::setAngle(int value) {
-    if (m_Angle != value) {
-        m_Angle = value;
-        //qDebug("MyGLWidget::setAngle: %i", value);
-    }
+    m_Angle = (float)value;
 }
 
 void MyGLWidget::setProjPerspective() {
-    if (!m_IsProjPerspective) {
-        m_IsProjPerspective = true;
-    }
+    m_IsProjPerspective = true;
 }
 
 void MyGLWidget::setProjOrthogonal() {
-    if (m_IsProjPerspective) {
-        m_IsProjPerspective = false;
-    }
+    m_IsProjPerspective = false;
 }
 
 void MyGLWidget::setNear(double value) {
-    if (m_NearClipping != value) {
-        m_NearClipping = value;
-        if (m_NearClipping > m_FarClipping - 2.0f) {
-            emit adjustFar(m_NearClipping + 2.0f);
-        }
-        //qDebug("MyGLWidget::setNear: %f", value);
+    m_Near = (float)value;
+    if (m_Near > m_Far - 2.0f) {
+        emit adjustFar(m_Near + 2.0f);
     }
 }
 
 void MyGLWidget::setFar(double value) {
-    if (m_FarClipping != value) {
-        m_FarClipping = value;
-        if (m_FarClipping < m_NearClipping + 2.0f) {
-            emit adjustNear(m_FarClipping - 2.0f);
-        }
-        //qDebug("MyGLWidget::setFar: %f", value);
+    m_Far = value;
+    if (m_Far < m_Near + 2.0f) {
+        emit adjustNear(m_Far - 2.0f);
     }
 }
 
 void MyGLWidget::setRotationA(int value) {
-    if (m_RotationA != value) {
-        m_RotationA = value;
-        for (uint i = 0; i < m_meshes.size(); i++) {
-            m_meshes[i]->rotate((float)value, QVector3D(1, 0, 0));
-        }
+    m_RotationA = value;
+    for (uint i = 0; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate((float)value, QVector3D(1, 0, 0));
     }
 }
 
 void MyGLWidget::setRotationB(int value) {
-    if (m_RotationB != value) {
-        m_RotationB = value;
-        for (uint i = 0; i < m_meshes.size(); i++) {
-            m_meshes[i]->rotate((float)value, QVector3D(0, 1, 0));
-        }
+    m_RotationB = value;
+    for (uint i = 0; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate((float)value, QVector3D(0, 1, 0));
     }
 }
 
 void MyGLWidget::setRotationC(int value) {
-    if (m_RotationC != value) {
-        m_RotationC = value;
-        for (uint i = 0; i < m_meshes.size(); i++) {
-            m_meshes[i]->rotate((float)value, QVector3D(0, 0, 1));
-        }
+    m_RotationC = value;
+    for (uint i = 0; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate((float)value, QVector3D(0, 0, 1));
     }
 }
 
