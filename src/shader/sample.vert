@@ -9,14 +9,15 @@ layout(location = 2) in vec2 aUV;
 layout(location = 0) out vec3 vColor;
 layout(location = 1) out vec2 vUV;
 
-layout(location = 0) uniform mat4x4 uRotationMat;
+layout(location = 0) uniform mat4x4 uMVP;
+layout(location = 1) uniform vec3 uColor;
 
 void main() {
     //vColor = aColor;
-    vColor = vec3(1.0f, 0.0f, 0.0f);
+    vColor = uColor;
     vUV = aUV;
 
     //vColor = texture(tex0, vUV);
 
-    gl_Position = uRotationMat * vec4(aPosition, 1.0f);
+    gl_Position = uMVP * vec4(aPosition, 1.0f);
 }

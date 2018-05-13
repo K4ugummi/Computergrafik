@@ -38,7 +38,7 @@ void MyGLWidget::initParam() {
     m_RotationB         = 0.0f;
     m_RotationC         = 0.0f;
 
-    m_CameraPos = QVector3D();
+    m_CameraPos = QVector3D(0.0f, 0.0f, -5.0f);
 }
 
 // Initialize OpenGL helper functions
@@ -54,6 +54,7 @@ void MyGLWidget::initializeGL() {
 
     glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_prog = new QOpenGLShaderProgram();
@@ -66,9 +67,29 @@ void MyGLWidget::initializeGL() {
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample_texture.frag");
     m_prog_texture->link();
 
-    Mesh * mesh = new Mesh();
-    mesh->setProgram(m_prog);
+    Mesh * mesh = new Mesh(":/models/gimbal.obj");
+    mesh->setProgram(m_prog_texture);
+    mesh->setColor(QVector3D(1.0f, 0.0f, 0.0f));
     m_meshes.push_back(mesh);
+
+    Mesh * mesh2 = new Mesh(":/models/gimbal.obj");
+    mesh2->setProgram(m_prog_texture);
+    mesh2->setColor(QVector3D(0.0f, 1.0f, 0.0f));
+    mesh2->scale(0.85f);
+    m_meshes.push_back(mesh2);
+
+    Mesh * mesh3 = new Mesh(":/models/gimbal.obj");
+    mesh3->setProgram(m_prog_texture);
+    mesh3->setColor(QVector3D(0.0f, 0.0f, 1.0f));
+    mesh3->scale(0.72f);
+    m_meshes.push_back(mesh3);
+
+    Mesh * sphere = new Mesh(":/models/sphere.obj");
+    sphere->setProgram(m_prog);
+    sphere->setColor(QVector3D(0.0f, 0.0f, 0.0f));
+    sphere->scale(0.1f);
+    sphere->translate(QVector3D(0.0f, 5.0f, 0.0f));
+    m_meshes.push_back(sphere);
 
     Q_ASSERT(m_prog->isLinked());
     Q_ASSERT(m_prog_texture->isLinked());
@@ -101,21 +122,22 @@ void MyGLWidget::initGLDebugger() {
 void MyGLWidget::resizeGL(int width, int height) {
     m_width = width;
     m_height = height;
-    qDebug("Width: %i - Height %i", m_width, m_height);
 }
 
 void MyGLWidget::paintGL() {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 proj;
     proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
     QMatrix4x4 view;
-    view.lookAt(QVector3D(0,0,-4), QVector3D(0,0,0), QVector3D(0,1,0));
+    view.lookAt(m_CameraPos, QVector3D(0,0,0), QVector3D(0,1,0));
 
-    QMatrix4x4 mvp = proj * view;
-    m_prog->setUniformValue(0, mvp);
+    QMatrix4x4 vp = proj * view;
 
     for (uint i=0; i<m_meshes.size(); i++) {
+        m_meshes[i]->bindProgram();
+        m_prog->setUniformValue(0, vp * m_meshes[i]->getModel());
+        m_prog->setUniformValue(1, m_meshes[i]->getColor());
         m_meshes[i]->draw();
     }
     update();
@@ -165,23 +187,26 @@ void MyGLWidget::setFar(double value) {
 }
 
 void MyGLWidget::setRotationA(int value) {
+    float dif = (float)value - m_RotationA;
     m_RotationA = value;
     for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate((float)value, QVector3D(1, 0, 0));
+        m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
     }
 }
 
 void MyGLWidget::setRotationB(int value) {
+    float dif = (float)value - m_RotationB;
     m_RotationB = value;
-    for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate((float)value, QVector3D(0, 1, 0));
+    for (uint i = 1; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate(dif, QVector3D(0, 1, 0));
     }
 }
 
 void MyGLWidget::setRotationC(int value) {
+    float dif = (float)value - m_RotationC;
     m_RotationC = value;
-    for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate((float)value, QVector3D(0, 0, 1));
+    for (uint i = 2; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
     }
 }
 

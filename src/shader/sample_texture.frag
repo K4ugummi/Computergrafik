@@ -10,5 +10,5 @@ layout(location = 0) out vec4 fragColor;
 layout(location = 7) uniform sampler2D tex0;
 
 void main() {
-    fragColor = texture(tex0, vUV);
+    fragColor = texture(tex0, vUV) * vec4(vColor, 1.0f);
 }

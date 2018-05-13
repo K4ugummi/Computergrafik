@@ -7,13 +7,13 @@
 
 #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
-Mesh::Mesh() {
+Mesh::Mesh(QString filepath) {
     bool success = initializeOpenGLFunctions();
     Q_ASSERT(success);
     Q_UNUSED(success);
 
     ModelLoader modelloader;
-    if (!modelloader.loadObjectFromFile(":/models/gimbal.obj")) {
+    if (!modelloader.loadObjectFromFile(filepath)) {
         qWarning("Could not load obj");
     }
     std::vector<GLfloat> vbo;
@@ -32,18 +32,8 @@ Mesh::Mesh() {
         m_indices.push_back(ibo[i]);
     }
 
-    /*
-    // TRIANGLE                   POSITION          COLOR               UV-COORDS
-    m_vertices.push_back(Vertex { -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,   0.25f, 0.25f, });
-    m_vertices.push_back(Vertex { 0.5f, -0.5f,      0.0f, 1.0f, 0.0f,   0.75f, 0.25f, });
-    m_vertices.push_back(Vertex { 0.0f, 0.5f,       0.0f, 0.0f, 1.0f,   0.5f, 0.75f, });
-    m_vertices.push_back(Vertex { 1.0f, 0.5f,       1.0f, 1.0f, 1.0f,   1.0f, 0.75f, });
-
-    GLuint data[] = { 0, 1, 2, 2, 1, 3, };
-    */
-
     QImage img;
-    img.load(":/textures/sample_texture.jpg");
+    img.load(":/textures/gimbal_wood.jpg");
     Q_ASSERT(!img.isNull());
 
     // VAO BIND
@@ -96,17 +86,42 @@ void Mesh::setProgram(QOpenGLShaderProgram * prog) {
     m_prog = prog;
 }
 
+void Mesh::setColor(QVector3D color) {
+    m_color = color;
+}
+
+QVector3D Mesh::getColor() {
+    return m_color;
+}
+
+QMatrix4x4 Mesh::getModel() {
+    return m_model;
+}
+
+void Mesh::bindProgram() {
+    m_prog->bind();
+}
+
+void Mesh::scale(GLfloat scale) {
+    m_model.scale(scale);
+}
+
 void Mesh::rotate(GLfloat angle, QVector3D axis) {
-    m_rotation = QMatrix4x4();
-    m_rotation.rotate(angle, axis);
+    m_model.rotate(angle, axis);
+}
+
+void Mesh::translate(QVector3D translate) {
+    m_model.translate(translate);
 }
 
 void Mesh::draw() {
     Q_ASSERT(m_prog->isLinked());
 
+    m_prog->bind();
     glBindVertexArray(m_vao);
 
-    m_prog->bind();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_tex);
 
     //void * const offset = reinterpret_cast<void * const>(sizeof(GLuint)*3);
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);

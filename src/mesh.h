@@ -29,18 +29,28 @@ private:
     GLuint m_ibo;   // Index Buffer Object
     GLuint m_tex;   // Texture
 
-    QMatrix4x4 m_rotation;
+    QVector3D m_color;
+
+    QMatrix4x4 m_model;
 
     QOpenGLShaderProgram * m_prog;  // Program to render this Mesh.
 
 protected:
 public:
-    Mesh();
+    Mesh(QString filepath);
     ~Mesh();
 
     void setProgram(QOpenGLShaderProgram * prog);
+    void setColor(QVector3D color);
 
+    QVector3D getColor();
+    QMatrix4x4 getModel();
+
+    void bindProgram();
+
+    void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);
+    void translate(QVector3D translate);
 
     void draw();
 };

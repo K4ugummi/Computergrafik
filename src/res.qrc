@@ -6,5 +6,6 @@
         <file>shader/sample_texture.frag</file>
         <file>models/gimbal.obj</file>
         <file>models/sphere.obj</file>
+        <file>textures/gimbal_wood.jpg</file>
     </qresource>
 </RCC>
