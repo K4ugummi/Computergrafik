@@ -73,4 +73,6 @@ void MainWindow::reset() {
 
     ui->cbAnimateCamera->setChecked(MYCRTL_DEF_ANIMATE);
     ui->cbAnimateGimbal->setChecked(MYCRTL_DEF_ANIMATE);
+    ui->openGLWidget->setAnimateCamera(MYCRTL_DEF_ANIMATE);
+    ui->openGLWidget->setAnimateGimbal(MYCRTL_DEF_ANIMATE);
 }

@@ -142,7 +142,12 @@ void MyGLWidget::paintGL() {
     QMatrix4x4 proj;
     proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
     QMatrix4x4 view;
-    view.lookAt(m_CameraPos, QVector3D(0,0,0), QVector3D(0,1,0));
+    if (m_AnimateCamera && m_meshes.size() >= 3) {
+        view = m_meshes[2]->getModel();
+    }
+    else {
+        view.lookAt(m_CameraPos, QVector3D(0,0,0), MYQV_UP);
+    }
     QMatrix4x4 vp = proj * view;
 
     if (m_AnimateGimbal) {
@@ -159,7 +164,6 @@ void MyGLWidget::paintGL() {
     m_prog->setUniformValue(0, vp * m_ball->getModel());
     m_prog->setUniformValue(1, m_ball->getColor());
     m_ball->draw();
-
 
     // Scedule this widget for repainting.
     update();
