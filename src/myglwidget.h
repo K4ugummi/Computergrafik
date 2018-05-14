@@ -57,6 +57,7 @@ private:
     void animateA(float time);
     void animateB(float time);
     void animateC(float time);
+    void animateBall(float time);
 
 protected:
     void initializeGL();

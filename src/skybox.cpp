@@ -100,7 +100,11 @@ Skybox::Skybox() {
 Skybox::~Skybox() {
     delete m_prog;
 
+    glDeleteVertexArrays(1, &m_vao);
     glDeleteTextures(1, &m_cubeTex);
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_ibo);
+
 }
 
 void Skybox::draw(const QMatrix4x4 &projection, QMatrix4x4 view) {

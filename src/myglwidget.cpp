@@ -100,7 +100,6 @@ void MyGLWidget::initializeGL() {
     m_ball->setProgram(m_prog_texture);
     m_ball->setColor(QVector3D(1.0f, 1.0f, 1.0f));
     m_ball->scale(0.1f);
-    m_ball->translate(QVector3D(0.0f, 5.0f, 0.0f));
 
     m_skybox = new Skybox();
 }
@@ -164,16 +163,17 @@ void MyGLWidget::paintGL() {
 
     QMatrix4x4 view;
     if (m_AnimateCamera && m_meshes.size() >= 3) {
-        view = m_meshes[2]->getModel();
+        view = m_meshes[2]->getModel().inverted();
     }
     else {
         view.lookAt(m_CameraPos, QVector3D(0,0,0), MYQV_UP);
     }
-    QMatrix4x4 vp = proj * view;
 
     if (m_AnimateGimbal) {
         animateGimbal(deltaTime);
     }
+
+    animateBall(deltaTime);
 
     m_skybox->draw(projSkybox, view);
     for (uint i=0; i<m_meshes.size(); i++) {
@@ -186,9 +186,9 @@ void MyGLWidget::paintGL() {
 }
 
 void MyGLWidget::animateGimbal(float time) {
-    animateA(time*0.001);
-    animateB(time*0.0015);
-    animateC(time*0.002);
+    animateA(time*0.0005);
+    animateB(time*0.0003);
+    animateC(time*0.0002);
     emit signalRotationA((int)m_RotationA);
     emit signalRotationB((int)m_RotationB);
     emit signalRotationC((int)m_RotationC);
@@ -225,6 +225,19 @@ void MyGLWidget::animateC(float time) {
     if (m_RotationC >= 360.0f)
         m_RotationC -= 360.0f;
     rotateFromID(2, time, QVector3D(1, 0, 0));
+}
+
+void MyGLWidget::animateBall(float time) {
+    static float timer;
+    timer += time*0.00001;
+    qDebug() << timer;
+    QVector3D position = QVector3D(0.85f*sin(timer), 0.85f*cos(timer), 0.0f);
+    m_ball->rotate(-time*0.002, QVector3D(sin(timer), cos(timer), 0.0f));
+    QMatrix4x4 rotation;
+    rotation.rotate(m_RotationA, QVector3D(1.0f, 0.0f, 0.0f));
+    rotation.rotate(m_RotationB, QVector3D(0.0f, 1.0f, 0.0f));
+    m_ball->setPosition(rotation * position);
+    qDebug() << position;
 }
 
 void MyGLWidget::setFOV(int value) {

@@ -42,9 +42,11 @@ public:
 
     void setProgram(QOpenGLShaderProgram * prog);
     void setColor(QVector3D color);
+    void setPosition(QVector3D position);
 
     QVector3D getColor();
     QMatrix4x4 getModel();
+    QVector3D getPosition();
 
     void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);

@@ -12,6 +12,8 @@ Mesh::Mesh(QString filepath) {
     Q_ASSERT(success);
     Q_UNUSED(success);
 
+    m_model = QMatrix4x4();
+
     ModelLoader modelloader;
     if (!modelloader.loadObjectFromFile(filepath)) {
         qWarning("Could not load obj");
@@ -98,12 +100,20 @@ QMatrix4x4 Mesh::getModel() {
     return m_model;
 }
 
+QVector3D Mesh::getPosition() {
+    return m_model.column(3).toVector3D();
+}
+
 void Mesh::scale(GLfloat scale) {
     m_model.scale(scale);
 }
 
 void Mesh::rotate(GLfloat angle, QVector3D axis) {
     m_model.rotate(angle, axis);
+}
+
+void Mesh::setPosition(QVector3D position) {
+    m_model.setColumn(3, QVector4D(position, 1.0f));
 }
 
 // I tried rotating the uv to align these small black arrows with
