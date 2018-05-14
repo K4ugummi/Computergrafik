@@ -7,5 +7,7 @@
         <file>models/gimbal.obj</file>
         <file>models/sphere.obj</file>
         <file>textures/gimbal_wood.jpg</file>
+        <file>shader/skybox.frag</file>
+        <file>shader/skybox.vert</file>
     </qresource>
 </RCC>
