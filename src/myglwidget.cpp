@@ -113,15 +113,15 @@ void MyGLWidget::initGLDebugger() {
 
     QSurfaceFormat fmt = this->format();
 
-    qDebug().nospace() << "    OpenGL " << fmt.majorVersion() << "." << fmt.minorVersion();
-    qDebug().noquote() << "    Profile:"
+    qDebug().nospace() << "  OpenGL " << fmt.majorVersion() << "." << fmt.minorVersion();
+    qDebug().noquote() << "  Profile:"
         << QMetaEnum::fromType<QSurfaceFormat::OpenGLContextProfile>().valueToKey(fmt.profile());
-    qDebug().noquote() << "    Options:" << QMetaEnum::fromType<QSurfaceFormat::FormatOption>().valueToKeys(fmt.options());
-    qDebug().noquote() << "    Renderable Type:"
+    qDebug().noquote() << "  Options:" << QMetaEnum::fromType<QSurfaceFormat::FormatOption>().valueToKeys(fmt.options());
+    qDebug().noquote() << "  Renderable Type:"
         << QMetaEnum::fromType<QSurfaceFormat::RenderableType>().valueToKey(fmt.renderableType());
-    qDebug().noquote() << "    Swap Behavior:"
+    qDebug().noquote() << "  Swap Behavior:"
         << QMetaEnum::fromType<QSurfaceFormat::SwapBehavior>().valueToKey(fmt.swapBehavior());
-    qDebug() << "    Swap Interval:" << fmt.swapInterval();
+    qDebug() << "  Swap Interval:" << fmt.swapInterval();
 }
 
 // Resize callback function for MyGLWidget.

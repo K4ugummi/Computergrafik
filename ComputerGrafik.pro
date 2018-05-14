@@ -39,13 +39,15 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/myglwidget.cpp \
-    src/mesh.cpp
+    src/mesh.cpp \
+    src/skybox.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/myglwidget.h \
     src/mesh.h \
-    src/modelloaderh.h
+    src/modelloaderh.h \
+    src/skybox.h
 
 FORMS += \
     ui/mainwindow.ui
