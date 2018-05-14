@@ -44,6 +44,8 @@ private:
     void initParam();
     void initGLDebugger();
 
+    void rotateFromID(uint id, GLfloat angle, QVector3D axis);
+
 protected:
     void initializeGL();
     void resizeGL(int width, int height);

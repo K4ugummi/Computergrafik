@@ -110,6 +110,10 @@ void Mesh::rotate(GLfloat angle, QVector3D axis) {
     m_model.rotate(angle, axis);
 }
 
+void Mesh::rotateUV(GLfloat angle, QVector2D point) {
+    // TODO
+}
+
 void Mesh::translate(QVector3D translate) {
     m_model.translate(translate);
 }

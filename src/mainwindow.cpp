@@ -35,6 +35,7 @@ void MainWindow::Init() {
     connect(ui->pbReset, &QPushButton::clicked, this, &MainWindow::reset);
 
     // Lambda functions to print slider values.
+    /*
     connect(ui->vsFOV, &QSlider::valueChanged,
             [](int value){ qDebug("MainWindow::ui->vsFOV(%i)", value); });
     connect(ui->vsAngle, &QSlider::valueChanged,
@@ -45,6 +46,7 @@ void MainWindow::Init() {
             [](int value){ qDebug("MainWindow::ui->hsRotationB(%i)", value); });
     connect(ui->hsRotationC, &QSlider::valueChanged,
             [](int value){ qDebug("MainWindow::ui->hsRotationC(%i)", value); });
+    */
 }
 
 MainWindow::~MainWindow() {

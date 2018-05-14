@@ -67,32 +67,36 @@ void MyGLWidget::initializeGL() {
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample_texture.frag");
     m_prog_texture->link();
 
+    Q_ASSERT(m_prog->isLinked());
+    Q_ASSERT(m_prog_texture->isLinked());
+
+    // Outer Gimbal
     Mesh * mesh = new Mesh(":/models/gimbal.obj");
     mesh->setProgram(m_prog_texture);
-    mesh->setColor(QVector3D(1.0f, 0.0f, 0.0f));
+    mesh->setColor(QVector3D(1.0f, 0.3f, 0.3f));
     m_meshes.push_back(mesh);
 
+    // Middle Gimbal
     Mesh * mesh2 = new Mesh(":/models/gimbal.obj");
     mesh2->setProgram(m_prog_texture);
-    mesh2->setColor(QVector3D(0.0f, 1.0f, 0.0f));
+    mesh2->setColor(QVector3D(0.3f, 1.0f, 0.3f));
     mesh2->scale(0.85f);
     m_meshes.push_back(mesh2);
 
+    // Inner Gimbal
     Mesh * mesh3 = new Mesh(":/models/gimbal.obj");
     mesh3->setProgram(m_prog_texture);
-    mesh3->setColor(QVector3D(0.0f, 0.0f, 1.0f));
+    mesh3->setColor(QVector3D(0.3f, 0.3f, 1.0f));
     mesh3->scale(0.72f);
     m_meshes.push_back(mesh3);
 
+    // Sphere
     Mesh * sphere = new Mesh(":/models/sphere.obj");
     sphere->setProgram(m_prog);
     sphere->setColor(QVector3D(0.0f, 0.0f, 0.0f));
     sphere->scale(0.1f);
     sphere->translate(QVector3D(0.0f, 5.0f, 0.0f));
     m_meshes.push_back(sphere);
-
-    Q_ASSERT(m_prog->isLinked());
-    Q_ASSERT(m_prog_texture->isLinked());
 }
 
 void MyGLWidget::initGLDebugger() {
@@ -119,11 +123,14 @@ void MyGLWidget::initGLDebugger() {
     qDebug() << "    Swap Interval:" << fmt.swapInterval();
 }
 
+// Resize callback function for MyGLWidget.
+// Is called autiomatically by QT.
 void MyGLWidget::resizeGL(int width, int height) {
     m_width = width;
     m_height = height;
 }
 
+//
 void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -140,6 +147,8 @@ void MyGLWidget::paintGL() {
         m_prog->setUniformValue(1, m_meshes[i]->getColor());
         m_meshes[i]->draw();
     }
+
+    // Scedule this widget for repainting.
     update();
 }
 
@@ -147,6 +156,7 @@ MyGLWidget::~MyGLWidget() {
     makeCurrent();
 
     delete m_prog;
+    delete m_prog_texture;
 
     for(uint i = 0; i < m_meshes.size(); i++) {
         delete m_meshes[i];
@@ -189,24 +199,45 @@ void MyGLWidget::setFar(double value) {
 void MyGLWidget::setRotationA(int value) {
     float dif = (float)value - m_RotationA;
     m_RotationA = value;
-    for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
-    }
+
+    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
+    rotateFromID(1, -m_RotationB, QVector3D(0, 1, 0));
+
+    rotateFromID(0, dif, QVector3D(1, 0, 0));
+
+    rotateFromID(1, m_RotationB, QVector3D(0, 1, 0));
+    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+    //for (uint i = 0; i < m_meshes.size(); i++) {
+    //    m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
+    //}
 }
 
 void MyGLWidget::setRotationB(int value) {
     float dif = (float)value - m_RotationB;
     m_RotationB = value;
-    for (uint i = 1; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate(dif, QVector3D(0, 1, 0));
-    }
+
+    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
+
+    rotateFromID(1, dif, QVector3D(0, 1, 0));
+
+    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+    //for (uint i = 1; i < m_meshes.size(); i++) {
+    //    m_meshes[i]->rotate(dif, QVector3D(0, 1, 0));
+    //}
 }
 
 void MyGLWidget::setRotationC(int value) {
     float dif = (float)value - m_RotationC;
     m_RotationC = value;
-    for (uint i = 2; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
+    rotateFromID(2, dif, QVector3D(1, 0, 0));
+    //for (uint i = 2; i < m_meshes.size(); i++) {
+    //    m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
+    //}
+}
+
+void MyGLWidget::rotateFromID(uint id, GLfloat angle, QVector3D axis) {
+    for (uint i = id; i < m_meshes.size(); i++) {
+        m_meshes[i]->rotate(angle, axis);
     }
 }
 

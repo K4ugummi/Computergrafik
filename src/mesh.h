@@ -50,6 +50,7 @@ public:
 
     void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);
+    void rotateUV(GLfloat angle, QVector2D point);
     void translate(QVector3D translate);
 
     void draw();
