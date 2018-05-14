@@ -27,6 +27,7 @@ private:
     bool m_IsProjPerspective;
     float m_Near, m_Far;
     float m_RotationA, m_RotationB, m_RotationC;
+    bool m_AnimateGimbal, m_AnimateCamera;
 
     int m_width, m_height;
 
@@ -70,6 +71,8 @@ public slots:
     void setRotationA(int value);
     void setRotationB(int value);
     void setRotationC(int value);
+    void setAnimateGimbal(bool value);
+    void setAnimateCamera(bool value);
 
     // Slots for OGL signals.
     void onOGLMessage(QOpenGLDebugMessage message);

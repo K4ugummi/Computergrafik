@@ -16,9 +16,8 @@ const int MYCTRL_DEF_ANGLE = 0;
 const bool MYCTRL_DEF_IS_PROJECTION = true;
 const double MYCTRL_DEF_NEARCLIPPING = 0.1;
 const double MYCTRL_DEF_FARCLIPPING = 100.0;
-const int MYCTRL_DEF_ROTATIONA = 0;
-const int MYCTRL_DEF_ROTATIONB = 0;
-const int MYCTRL_DEF_ROTATIONC = 0;
+const int MYCTRL_DEF_ROTATION = 0;
+const bool MYCRTL_DEF_ANIMATE = false;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -65,10 +64,13 @@ void MainWindow::reset() {
     ui->rbPerspective->setChecked(MYCTRL_DEF_IS_PROJECTION);
     // rbOrthogonal will be changed from rbPerspective signal.
 
-    ui->hsRotationA->setValue(MYCTRL_DEF_ROTATIONA);
-    ui->hsRotationB->setValue(MYCTRL_DEF_ROTATIONB);
-    ui->hsRotationC->setValue(MYCTRL_DEF_ROTATIONC);
+    ui->hsRotationA->setValue(MYCTRL_DEF_ROTATION);
+    ui->hsRotationB->setValue(MYCTRL_DEF_ROTATION);
+    ui->hsRotationC->setValue(MYCTRL_DEF_ROTATION);
 
     ui->dsbFar->setValue(MYCTRL_DEF_FARCLIPPING);
     ui->dsbNear->setValue(MYCTRL_DEF_NEARCLIPPING);
+
+    ui->cbAnimateCamera->setChecked(MYCRTL_DEF_ANIMATE);
+    ui->cbAnimateGimbal->setChecked(MYCRTL_DEF_ANIMATE);
 }

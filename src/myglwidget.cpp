@@ -37,6 +37,8 @@ void MyGLWidget::initParam() {
     m_RotationA         = 0.0f;
     m_RotationB         = 0.0f;
     m_RotationC         = 0.0f;
+    m_AnimateCamera     = false;
+    m_AnimateGimbal     = false;
 
     m_CameraPos = QVector3D(0.0f, 0.0f, -5.0f);
 }
@@ -229,6 +231,14 @@ void MyGLWidget::setRotationC(int value) {
     float dif = (float)value - m_RotationC;
     m_RotationC = value;
     rotateFromID(2, dif, QVector3D(1, 0, 0));
+}
+
+void MyGLWidget::setAnimateCamera(bool value) {
+    m_AnimateCamera = value;
+}
+
+void MyGLWidget::setAnimateGimbal(bool value) {
+    m_AnimateGimbal = value;
 }
 
 void MyGLWidget::rotateFromID(uint id, GLfloat angle, QVector3D axis) {
