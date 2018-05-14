@@ -159,6 +159,9 @@ void MyGLWidget::paintGL() {
 
     QMatrix4x4 proj;
     proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
+    QMatrix4x4 projSkybox;
+    projSkybox.perspective(m_FOV, (float)m_width / (float)m_height, 0.1f, 10000.0f);
+
     QMatrix4x4 view;
     if (m_AnimateCamera && m_meshes.size() >= 3) {
         view = m_meshes[2]->getModel();
@@ -172,7 +175,7 @@ void MyGLWidget::paintGL() {
         animateGimbal(deltaTime);
     }
 
-    m_skybox->draw(proj, view);
+    m_skybox->draw(projSkybox, view);
     for (uint i=0; i<m_meshes.size(); i++) {
         m_meshes[i]->draw(proj, view);
     }

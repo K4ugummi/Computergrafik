@@ -84,8 +84,9 @@ Skybox::Skybox() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // VAO UNBIND
     glBindVertexArray(0);
@@ -106,7 +107,7 @@ void Skybox::draw(const QMatrix4x4 &projection, QMatrix4x4 view) {
     glDepthMask(GL_FALSE);
 
     view.column(3) = QVector4D(0.0f, 0.0f, 0.0f, 0.0f);
-    view.scale(10.0f);
+    view.scale(500.0f);
 
     glBindVertexArray(m_vao);
 
