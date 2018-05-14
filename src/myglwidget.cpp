@@ -98,9 +98,27 @@ void MyGLWidget::initializeGL() {
     // Sphere
     m_ball = new Mesh(":/models/sphere.obj");
     m_ball->setProgram(m_prog_texture);
-    m_ball->setColor(QVector3D(0.5f, 0.5f, 0.5f));
+    m_ball->setColor(QVector3D(1.0f, 1.0f, 1.0f));
     m_ball->scale(0.1f);
     m_ball->translate(QVector3D(0.0f, 5.0f, 0.0f));
+
+    m_skybox = new Skybox();
+}
+
+MyGLWidget::~MyGLWidget() {
+    makeCurrent();
+
+    delete m_prog;
+    delete m_prog_texture;
+
+    delete m_skybox;
+    delete m_ball;
+    for(uint i = 0; i < m_meshes.size(); i++) {
+        delete m_meshes[i];
+    }
+
+    delete m_debuglogger;
+    doneCurrent();
 }
 
 void MyGLWidget::initGLDebugger() {
@@ -154,6 +172,7 @@ void MyGLWidget::paintGL() {
         animateGimbal(deltaTime);
     }
 
+    m_skybox->draw();
     for (uint i=0; i<m_meshes.size(); i++) {
         m_meshes[i]->bindProgram();
         m_prog->setUniformValue(0, vp * m_meshes[i]->getModel());
@@ -209,20 +228,6 @@ void MyGLWidget::animateC(float time) {
     if (m_RotationC >= 360.0f)
         m_RotationC -= 360.0f;
     rotateFromID(2, time, QVector3D(1, 0, 0));
-}
-
-MyGLWidget::~MyGLWidget() {
-    makeCurrent();
-
-    delete m_prog;
-    delete m_prog_texture;
-
-    for(uint i = 0; i < m_meshes.size(); i++) {
-        delete m_meshes[i];
-    }
-
-    delete m_debuglogger;
-    doneCurrent();
 }
 
 void MyGLWidget::setFOV(int value) {

@@ -6,6 +6,7 @@
 #define MYGLWIDGET_H
 
 #include "mesh.h"
+#include "skybox.h"
 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions_3_3_Core>
@@ -40,6 +41,7 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
+    Skybox * m_skybox;
     std::vector<Mesh*> m_meshes;    // Gimbal
     Mesh * m_ball;                  // Ball
                                     // Not a nice solution ;(

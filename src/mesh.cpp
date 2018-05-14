@@ -140,4 +140,6 @@ void Mesh::draw() {
 
     //void * const offset = reinterpret_cast<void * const>(sizeof(GLuint)*3);
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
+
+    glBindVertexArray(0);
 }

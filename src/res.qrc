@@ -9,5 +9,11 @@
         <file>textures/gimbal_wood.jpg</file>
         <file>shader/skybox.frag</file>
         <file>shader/skybox.vert</file>
+        <file>textures/skybox/back.jpg</file>
+        <file>textures/skybox/bottom.jpg</file>
+        <file>textures/skybox/front.jpg</file>
+        <file>textures/skybox/left.jpg</file>
+        <file>textures/skybox/right.jpg</file>
+        <file>textures/skybox/top.jpg</file>
     </qresource>
 </RCC>

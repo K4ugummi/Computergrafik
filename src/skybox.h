@@ -17,13 +17,14 @@ struct SkyBoxVertex {
 
 class Skybox : QOpenGLFunctions_3_3_Core {
 private:
-    std::vector<SkyBoxVertex> m_vertices;
+    std::vector<GLfloat> m_vertices;
+
     std::vector<GLuint> m_indices;
 
     GLuint m_vao;   // Vertex Array Object
     GLuint m_vbo;   // Vertex Buffer Object
     GLuint m_ibo;   // Index Buffer Object
-    GLuint m_tex;   // Texture
+    GLuint m_cubeTex;   // Texture
 
     QOpenGLShaderProgram * m_prog;  // Program to render this Skybox.
 
