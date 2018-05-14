@@ -29,7 +29,7 @@ private:
 
 protected:
 public:
-    Skybox(QString filepath);
+    Skybox();
     ~Skybox();
 
     void setProgram(QOpenGLShaderProgram * prog);

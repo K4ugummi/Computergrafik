@@ -390,6 +390,29 @@
           </widget>
          </item>
          <item>
+          <widget class="QGroupBox" name="gbAnimation">
+           <property name="title">
+            <string>GroupBox</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QCheckBox" name="cbAnimateGimbal">
+              <property name="text">
+               <string>Animate Gimbal</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="cbAnimateCamera">
+              <property name="text">
+               <string>Animate Camera</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
           <widget class="QGroupBox" name="gbClipping">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
