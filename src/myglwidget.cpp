@@ -45,6 +45,7 @@ void MyGLWidget::initParam() {
 
 // Initialize OpenGL helper functions
 void MyGLWidget::initializeGL() {
+    m_timer.start();
     qDebug("MyGLWidget::initializeGL()");
     initGLDebugger();
 
@@ -135,14 +136,18 @@ void MyGLWidget::resizeGL(int width, int height) {
 
 //
 void MyGLWidget::paintGL() {
+    static float deltaTime = m_timer.elapsed();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 proj;
     proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
     QMatrix4x4 view;
     view.lookAt(m_CameraPos, QVector3D(0,0,0), QVector3D(0,1,0));
-
     QMatrix4x4 vp = proj * view;
+
+    if (m_AnimateGimbal) {
+        animateGimbal(deltaTime);
+    }
 
     for (uint i=0; i<m_meshes.size(); i++) {
         m_meshes[i]->bindProgram();
@@ -155,8 +160,51 @@ void MyGLWidget::paintGL() {
     m_prog->setUniformValue(1, m_ball->getColor());
     m_ball->draw();
 
+
     // Scedule this widget for repainting.
     update();
+}
+
+void MyGLWidget::animateGimbal(float time) {
+    animateA(time*0.001);
+    animateB(time*0.0015);
+    animateC(time*0.002);
+    emit signalRotationA((int)m_RotationA);
+    emit signalRotationB((int)m_RotationB);
+    emit signalRotationC((int)m_RotationC);
+}
+
+void MyGLWidget::animateA(float time) {
+    m_RotationA += time;
+    if (m_RotationA >= 360.0f)
+        m_RotationA -= 360.0f;
+
+    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
+    rotateFromID(1, -m_RotationB, QVector3D(0, 1, 0));
+
+    rotateFromID(0, time, QVector3D(1, 0, 0));
+
+    rotateFromID(1, m_RotationB, QVector3D(0, 1, 0));
+    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+}
+
+void MyGLWidget::animateB(float time) {
+    m_RotationB += time;
+    if (m_RotationB >= 360.0f)
+        m_RotationB -= 360.0f;
+
+    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
+
+    rotateFromID(1, time, QVector3D(0, 1, 0));
+
+    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+}
+
+void MyGLWidget::animateC(float time) {
+    m_RotationC += time;
+    if (m_RotationC >= 360.0f)
+        m_RotationC -= 360.0f;
+    rotateFromID(2, time, QVector3D(1, 0, 0));
 }
 
 MyGLWidget::~MyGLWidget() {

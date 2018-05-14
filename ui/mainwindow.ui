@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>690</width>
-    <height>535</height>
+    <height>637</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -596,6 +596,9 @@
    <slots>
     <signal>adjustNear(double)</signal>
     <signal>adjustFar(double)</signal>
+    <signal>signalRotationA(int)</signal>
+    <signal>signalRotationB(int)</signal>
+    <signal>signalRotationC(int)</signal>
     <slot>setFOV(int)</slot>
     <slot>setAngle(int)</slot>
     <slot>setNear(double)</slot>
@@ -633,7 +636,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>161</x>
-     <y>289</y>
+     <y>350</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
@@ -665,7 +668,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>161</x>
-     <y>277</y>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -729,7 +732,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>161</x>
-     <y>264</y>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel">
      <x>230</x>
@@ -761,7 +764,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>161</x>
-     <y>448</y>
+     <y>536</y>
     </hint>
     <hint type="destinationlabel">
      <x>277</x>
@@ -793,7 +796,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>161</x>
-     <y>466</y>
+     <y>568</y>
     </hint>
     <hint type="destinationlabel">
      <x>262</x>
@@ -813,7 +816,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
-     <y>448</y>
+     <y>536</y>
     </hint>
    </hints>
   </connection>
@@ -828,8 +831,8 @@
      <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>147</x>
-     <y>465</y>
+     <x>161</x>
+     <y>568</y>
     </hint>
    </hints>
   </connection>
@@ -856,8 +859,8 @@
    <slot>setProjOrthogonal()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
-     <y>201</y>
+     <x>162</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
      <x>224</x>
@@ -872,8 +875,8 @@
    <slot>setAnimateGimbal(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>131</x>
-     <y>347</y>
+     <x>162</x>
+     <y>424</y>
     </hint>
     <hint type="destinationlabel">
      <x>206</x>
@@ -888,12 +891,60 @@
    <slot>setAnimateCamera(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>108</x>
-     <y>375</y>
+     <x>142</x>
+     <y>453</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
      <y>375</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>signalRotationA(int)</signal>
+   <receiver>hsRotationA</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>212</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>133</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>signalRotationB(int)</signal>
+   <receiver>hsRotationB</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>138</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openGLWidget</sender>
+   <signal>signalRotationC(int)</signal>
+   <receiver>hsRotationC</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>344</y>
     </hint>
    </hints>
   </connection>

@@ -14,6 +14,7 @@
 #include <QOpenGLDebugLogger>
 #include <QOpenGLDebugMessage>
 #include <QOpenGLBuffer>
+#include <QElapsedTimer>
 
 #include <vector>
 
@@ -30,6 +31,8 @@ private:
     bool m_AnimateGimbal, m_AnimateCamera;
 
     int m_width, m_height;
+
+    QElapsedTimer m_timer;
 
     // Camera values.
     QVector3D m_CameraPos;
@@ -48,6 +51,10 @@ private:
     void initGLDebugger();
 
     void rotateFromID(uint id, GLfloat angle, QVector3D axis);
+    void animateGimbal(float time);
+    void animateA(float time);
+    void animateB(float time);
+    void animateC(float time);
 
 protected:
     void initializeGL();
@@ -80,6 +87,9 @@ public slots:
 signals:
     void adjustNear(double value);
     void adjustFar(double value);
+    void signalRotationA(int value);
+    void signalRotationB(int value);
+    void signalRotationC(int value);
 };
 
 #endif // MYGLWIDGET_H
