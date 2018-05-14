@@ -46,14 +46,12 @@ public:
     QVector3D getColor();
     QMatrix4x4 getModel();
 
-    void bindProgram();
-
     void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);
     void rotateRawZ(GLfloat angle);
     void translate(QVector3D translate);
 
-    void draw();
+    void draw(const QMatrix4x4 &projection, const QMatrix4x4 &view);
 };
 
 #endif // MY_MESH_H

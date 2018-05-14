@@ -172,17 +172,11 @@ void MyGLWidget::paintGL() {
         animateGimbal(deltaTime);
     }
 
-    m_skybox->draw();
+    m_skybox->draw(proj, view);
     for (uint i=0; i<m_meshes.size(); i++) {
-        m_meshes[i]->bindProgram();
-        m_prog->setUniformValue(0, vp * m_meshes[i]->getModel());
-        m_prog->setUniformValue(1, m_meshes[i]->getColor());
-        m_meshes[i]->draw();
+        m_meshes[i]->draw(proj, view);
     }
-    m_ball->bindProgram();
-    m_prog->setUniformValue(0, vp * m_ball->getModel());
-    m_prog->setUniformValue(1, m_ball->getColor());
-    m_ball->draw();
+    m_ball->draw(proj, view);
 
     // Scedule this widget for repainting.
     update();

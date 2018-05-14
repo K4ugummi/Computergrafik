@@ -98,10 +98,6 @@ QMatrix4x4 Mesh::getModel() {
     return m_model;
 }
 
-void Mesh::bindProgram() {
-    m_prog->bind();
-}
-
 void Mesh::scale(GLfloat scale) {
     m_model.scale(scale);
 }
@@ -129,14 +125,17 @@ void Mesh::translate(QVector3D translate) {
     m_model.translate(translate);
 }
 
-void Mesh::draw() {
+void Mesh::draw(const QMatrix4x4 &projection, const QMatrix4x4 &view) {
     Q_ASSERT(m_prog->isLinked());
 
-    m_prog->bind();
     glBindVertexArray(m_vao);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_tex);
+
+    m_prog->bind();
+    m_prog->setUniformValue(0, projection * view * m_model);
+    m_prog->setUniformValue(1, m_color);
 
     //void * const offset = reinterpret_cast<void * const>(sizeof(GLuint)*3);
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);

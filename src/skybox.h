@@ -33,14 +33,7 @@ public:
     Skybox();
     ~Skybox();
 
-    void setProgram(QOpenGLShaderProgram * prog);
-    void setColor(QVector3D color);
-
-    QMatrix4x4 getModel();
-
-    void bindProgram();
-
-    void draw();
+    void draw(const QMatrix4x4 &projection, QMatrix4x4 view);
 };
 
 #endif // MY_SKYBOX_H

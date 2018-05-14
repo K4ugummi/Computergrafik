@@ -50,7 +50,7 @@ Skybox::Skybox() {
     Q_ASSERT(!topImg.isNull());
 
     QImage bottomImg;
-    bottomImg.load(":/textures/skybox/front.jpg");
+    bottomImg.load(":/textures/skybox/bottom.jpg");
     Q_ASSERT(!bottomImg.isNull());
 
     // VAO BIND
@@ -60,12 +60,12 @@ Skybox::Skybox() {
     // IBO
     glGenBuffers(1, &m_ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size(), &m_indices.front(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*m_indices.size(), &m_indices.front(), GL_STATIC_DRAW);
 
     // VBO BIND
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, m_vertices.size(), &m_vertices.front(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*m_vertices.size(), &m_vertices.front(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat)*3, nullptr);
@@ -74,12 +74,12 @@ Skybox::Skybox() {
     glGenTextures(1, &m_cubeTex);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubeTex);
 
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA8, frontImg.width(), frontImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, frontImg.bits());
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA8, backImg.width(), backImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, backImg.bits());
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA8, leftImg.width(), leftImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, leftImg.bits());
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA8, rightImg.width(), rightImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rightImg.bits());
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA8, topImg.width(), topImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, topImg.bits());
-    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA8, bottomImg.width(), bottomImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, bottomImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, rightImg.width(), rightImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rightImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, leftImg.width(), leftImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, leftImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, topImg.width(), topImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, topImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, bottomImg.width(), bottomImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, bottomImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, backImg.width(), backImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, backImg.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, frontImg.width(), frontImg.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, frontImg.bits());
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -102,5 +102,25 @@ Skybox::~Skybox() {
     glDeleteTextures(1, &m_cubeTex);
 }
 
-void Skybox::draw() {
+void Skybox::draw(const QMatrix4x4 &projection, QMatrix4x4 view) {
+    glDepthMask(GL_FALSE);
+
+    view.column(3) = QVector4D(0.0f, 0.0f, 0.0f, 0.0f);
+    view.scale(10.0f);
+
+    glBindVertexArray(m_vao);
+
+    //glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubeTex);
+
+    m_prog->bind();
+    m_prog->setUniformValue(0, projection);
+    m_prog->setUniformValue(1, view);
+    m_prog->setUniformValue(7, 0);
+
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
+    glBindVertexArray(0);
+
+    glDepthMask(GL_TRUE);
 }
