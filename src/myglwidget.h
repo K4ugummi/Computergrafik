@@ -36,7 +36,9 @@ private:
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
 
-    std::vector<Mesh*> m_meshes;
+    std::vector<Mesh*> m_meshes;    // Gimbal
+    Mesh * m_ball;                  // Ball
+                                    // Not a nice solution ;(
 
     QOpenGLShaderProgram * m_prog;
     QOpenGLShaderProgram * m_prog_texture;

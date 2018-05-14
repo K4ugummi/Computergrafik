@@ -31,7 +31,7 @@ private:
 
     QVector3D m_color;
 
-    QMatrix4x4 m_model;
+    QMatrix4x4 m_model; // Model Matrix (Rotation, Scale, Translation)
 
     QOpenGLShaderProgram * m_prog;  // Program to render this Mesh.
 
@@ -50,7 +50,7 @@ public:
 
     void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);
-    void rotateUV(GLfloat angle, QVector2D point);
+    void rotateRawZ(GLfloat angle);
     void translate(QVector3D translate);
 
     void draw();

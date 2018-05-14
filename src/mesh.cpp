@@ -110,8 +110,19 @@ void Mesh::rotate(GLfloat angle, QVector3D axis) {
     m_model.rotate(angle, axis);
 }
 
-void Mesh::rotateUV(GLfloat angle, QVector2D point) {
-    // TODO
+// I tried rotating the uv to align these small black arrows with
+// the rotation axis of the next gimbal element.
+void Mesh::rotateRawZ(GLfloat angle) {
+    for (uint i = 0; i < m_vertices.size(); i++) {
+        float x = m_vertices[i].position[0];
+        float y = m_vertices[i].position[1];
+
+        m_vertices[i].position[0] = x * cos(angle) - y * sin(angle);
+        m_vertices[i].position[1] = x * sin(angle) + y * cos(angle);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * m_vertices.size(), &m_vertices.front(), GL_STATIC_DRAW);
 }
 
 void Mesh::translate(QVector3D translate) {

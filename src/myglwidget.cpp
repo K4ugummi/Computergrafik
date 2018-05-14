@@ -72,6 +72,7 @@ void MyGLWidget::initializeGL() {
 
     // Outer Gimbal
     Mesh * mesh = new Mesh(":/models/gimbal.obj");
+    mesh->rotateRawZ(1.570796f);
     mesh->setProgram(m_prog_texture);
     mesh->setColor(QVector3D(1.0f, 0.3f, 0.3f));
     m_meshes.push_back(mesh);
@@ -85,18 +86,18 @@ void MyGLWidget::initializeGL() {
 
     // Inner Gimbal
     Mesh * mesh3 = new Mesh(":/models/gimbal.obj");
+    mesh3->rotateRawZ(1.570796f);
     mesh3->setProgram(m_prog_texture);
     mesh3->setColor(QVector3D(0.3f, 0.3f, 1.0f));
     mesh3->scale(0.72f);
     m_meshes.push_back(mesh3);
 
     // Sphere
-    Mesh * sphere = new Mesh(":/models/sphere.obj");
-    sphere->setProgram(m_prog);
-    sphere->setColor(QVector3D(0.0f, 0.0f, 0.0f));
-    sphere->scale(0.1f);
-    sphere->translate(QVector3D(0.0f, 5.0f, 0.0f));
-    m_meshes.push_back(sphere);
+    m_ball = new Mesh(":/models/sphere.obj");
+    m_ball->setProgram(m_prog_texture);
+    m_ball->setColor(QVector3D(0.5f, 0.5f, 0.5f));
+    m_ball->scale(0.1f);
+    m_ball->translate(QVector3D(0.0f, 5.0f, 0.0f));
 }
 
 void MyGLWidget::initGLDebugger() {
@@ -147,6 +148,10 @@ void MyGLWidget::paintGL() {
         m_prog->setUniformValue(1, m_meshes[i]->getColor());
         m_meshes[i]->draw();
     }
+    m_ball->bindProgram();
+    m_prog->setUniformValue(0, vp * m_ball->getModel());
+    m_prog->setUniformValue(1, m_ball->getColor());
+    m_ball->draw();
 
     // Scedule this widget for repainting.
     update();
@@ -207,9 +212,6 @@ void MyGLWidget::setRotationA(int value) {
 
     rotateFromID(1, m_RotationB, QVector3D(0, 1, 0));
     rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
-    //for (uint i = 0; i < m_meshes.size(); i++) {
-    //    m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
-    //}
 }
 
 void MyGLWidget::setRotationB(int value) {
@@ -221,18 +223,12 @@ void MyGLWidget::setRotationB(int value) {
     rotateFromID(1, dif, QVector3D(0, 1, 0));
 
     rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
-    //for (uint i = 1; i < m_meshes.size(); i++) {
-    //    m_meshes[i]->rotate(dif, QVector3D(0, 1, 0));
-    //}
 }
 
 void MyGLWidget::setRotationC(int value) {
     float dif = (float)value - m_RotationC;
     m_RotationC = value;
     rotateFromID(2, dif, QVector3D(1, 0, 0));
-    //for (uint i = 2; i < m_meshes.size(); i++) {
-    //    m_meshes[i]->rotate(dif, QVector3D(1, 0, 0));
-    //}
 }
 
 void MyGLWidget::rotateFromID(uint id, GLfloat angle, QVector3D axis) {
