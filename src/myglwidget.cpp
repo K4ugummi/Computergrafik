@@ -84,7 +84,7 @@ void MyGLWidget::initializeGL() {
     Mesh * mesh2 = new Mesh(":/models/gimbal.obj");
     mesh2->setProgram(m_prog_texture);
     mesh2->setColor(QVector3D(0.3f, 1.0f, 0.3f));
-    mesh2->scale(0.85f);
+    mesh2->setScale(0.85f);
     m_meshes.push_back(mesh2);
 
     // Inner Gimbal
@@ -92,7 +92,7 @@ void MyGLWidget::initializeGL() {
     mesh3->rotateRawZ(1.570796f);
     mesh3->setProgram(m_prog_texture);
     mesh3->setColor(QVector3D(0.3f, 0.3f, 1.0f));
-    mesh3->scale(0.72f);
+    mesh3->setScale(0.72f);
     m_meshes.push_back(mesh3);
 
     // Sphere
@@ -102,6 +102,8 @@ void MyGLWidget::initializeGL() {
     m_ball->scale(0.1f);
 
     m_skybox = new Skybox();
+
+    Q_ASSERT(m_meshes.size() == 3);
 }
 
 MyGLWidget::~MyGLWidget() {
@@ -153,7 +155,8 @@ void MyGLWidget::resizeGL(int width, int height) {
 
 //
 void MyGLWidget::paintGL() {
-    static float deltaTime = m_timer.elapsed();
+    float deltaTime = m_timer.elapsed();
+    m_timer.start();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 proj;
@@ -185,59 +188,63 @@ void MyGLWidget::paintGL() {
     update();
 }
 
-void MyGLWidget::animateGimbal(float time) {
-    animateA(time*0.0005);
-    animateB(time*0.0003);
-    animateC(time*0.0002);
+void MyGLWidget::animateGimbal(float deltaTime) {
+    m_RotationA += deltaTime * 0.1;
+    if (m_RotationA >= 360.0f)
+        m_RotationA -= 360.0f;
+
+    m_RotationB += deltaTime * 0.07;
+    if (m_RotationB >= 360.0f)
+        m_RotationB -= 360.0f;
+
+    m_RotationC += deltaTime * 0.05;
+    if (m_RotationC >= 360.0f)
+        m_RotationC -= 360.0f;
+
+    rotateGimbal();
+
     emit signalRotationA((int)m_RotationA);
     emit signalRotationB((int)m_RotationB);
     emit signalRotationC((int)m_RotationC);
 }
 
-void MyGLWidget::animateA(float time) {
-    m_RotationA += time;
-    if (m_RotationA >= 360.0f)
-        m_RotationA -= 360.0f;
+QVector3D changeColorTime(float time) {
 
-    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
-    rotateFromID(1, -m_RotationB, QVector3D(0, 1, 0));
-
-    rotateFromID(0, time, QVector3D(1, 0, 0));
-
-    rotateFromID(1, m_RotationB, QVector3D(0, 1, 0));
-    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
 }
 
-void MyGLWidget::animateB(float time) {
-    m_RotationB += time;
-    if (m_RotationB >= 360.0f)
-        m_RotationB -= 360.0f;
+void MyGLWidget::animateBall(float deltaTime) {
+    static float ballRotationTimer;
+    static float ballRotationX;
+    static float ballRotationY;
 
-    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
+    ballRotationTimer += deltaTime*0.001;
+    QVector3D position = QVector3D(0.85f*sin(ballRotationTimer), 0.85f*cos(ballRotationTimer), -0.16f);
 
-    rotateFromID(1, time, QVector3D(0, 1, 0));
+    ballRotationX = -sin(ballRotationTimer);
+    ballRotationY = -cos(ballRotationTimer);
 
-    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
-}
+    /*
+    QMatrix4x4 ballRotation;
+    ballRotation.translate(0.0f, 0.85f, 0.0f);
+    ballRotation.rotate(ballRotationTimer, QVector3D(0, 1, 0));
+    ballRotation.rotate(ballRotationTimer, QVector3D(1, 0, 0));
+    ballRotation.scale(0.1f);
+    */
+    QMatrix4x4 ballRotation;
+    ballRotation.rotate(ballRotationTimer, QVector3D(1, 0, 0));
 
-void MyGLWidget::animateC(float time) {
-    m_RotationC += time;
-    if (m_RotationC >= 360.0f)
-        m_RotationC -= 360.0f;
-    rotateFromID(2, time, QVector3D(1, 0, 0));
-}
+    m_ball->setModel(ballRotation);
+    m_ball->scale(0.1f);
 
-void MyGLWidget::animateBall(float time) {
-    static float timer;
-    timer += time*0.00001;
-    qDebug() << timer;
-    QVector3D position = QVector3D(0.85f*sin(timer), 0.85f*cos(timer), 0.0f);
-    m_ball->rotate(-time*0.002, QVector3D(sin(timer), cos(timer), 0.0f));
-    QMatrix4x4 rotation;
-    rotation.rotate(m_RotationA, QVector3D(1.0f, 0.0f, 0.0f));
-    rotation.rotate(m_RotationB, QVector3D(0.0f, 1.0f, 0.0f));
-    m_ball->setPosition(rotation * position);
-    qDebug() << position;
+    m_ball->rotate(ballRotationTimer, QVector3D(1, 0, 0));
+    //m_ball->rotate(ballRotationY, QVector3D(0, 0, 1));
+    m_ball->rotate(0.01f , QVector3D(1, 0, 0));
+
+    // Gimbal rotations
+    QMatrix4x4 worldRotation;
+    worldRotation.rotate(m_RotationA, QVector3D(1.0f, 0.0f, 0.0f));
+    worldRotation.rotate(m_RotationB, QVector3D(0.0f, 1.0f, 0.0f));
+    m_ball->setPosition(worldRotation * position);
 }
 
 void MyGLWidget::setFOV(int value) {
@@ -270,34 +277,33 @@ void MyGLWidget::setFar(double value) {
     }
 }
 
+void MyGLWidget::rotateGimbal() {
+    QMatrix4x4 rotMA;
+    rotMA.rotate(m_RotationA, QVector3D(1, 0, 0));
+    QMatrix4x4 rotMB = rotMA;
+    rotMB.rotate(m_RotationB, QVector3D(0, 1, 0));
+    QMatrix4x4 rotMC = rotMB;
+    rotMC.rotate(m_RotationC, QVector3D(1, 0, 0));
+
+    Q_ASSERT(m_meshes.size() >= 3);
+    m_meshes[0]->setRotation(rotMA);
+    m_meshes[1]->setRotation(rotMB);
+    m_meshes[2]->setRotation(rotMC);
+}
+
 void MyGLWidget::setRotationA(int value) {
-    float dif = (float)value - m_RotationA;
     m_RotationA = value;
-
-    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
-    rotateFromID(1, -m_RotationB, QVector3D(0, 1, 0));
-
-    rotateFromID(0, dif, QVector3D(1, 0, 0));
-
-    rotateFromID(1, m_RotationB, QVector3D(0, 1, 0));
-    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+    rotateGimbal();
 }
 
 void MyGLWidget::setRotationB(int value) {
-    float dif = (float)value - m_RotationB;
     m_RotationB = value;
-
-    rotateFromID(2, -m_RotationC, QVector3D(1, 0, 0));
-
-    rotateFromID(1, dif, QVector3D(0, 1, 0));
-
-    rotateFromID(2, m_RotationC, QVector3D(1, 0, 0));
+    rotateGimbal();
 }
 
 void MyGLWidget::setRotationC(int value) {
-    float dif = (float)value - m_RotationC;
     m_RotationC = value;
-    rotateFromID(2, dif, QVector3D(1, 0, 0));
+    rotateGimbal();
 }
 
 void MyGLWidget::setAnimateCamera(bool value) {
@@ -306,12 +312,6 @@ void MyGLWidget::setAnimateCamera(bool value) {
 
 void MyGLWidget::setAnimateGimbal(bool value) {
     m_AnimateGimbal = value;
-}
-
-void MyGLWidget::rotateFromID(uint id, GLfloat angle, QVector3D axis) {
-    for (uint i = id; i < m_meshes.size(); i++) {
-        m_meshes[i]->rotate(angle, axis);
-    }
 }
 
 void MyGLWidget::keyPressEvent(QKeyEvent *event) {

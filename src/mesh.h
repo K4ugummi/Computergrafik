@@ -29,7 +29,13 @@ private:
     GLuint m_ibo;   // Index Buffer Object
     GLuint m_tex;   // Texture
 
+    // Additional Color that is multiplied with the texture.
+    // Set to (1.0f, 1.0f, 1.0f) for texture only
     QVector3D m_color;
+
+    GLfloat m_scale;        // Scaling factor.
+    QVector3D m_position;   // Position in World space.
+    QVector3D m_rotation;   // Euler rotation for x-, y-, z-axis.
 
     QMatrix4x4 m_model; // Model Matrix (Rotation, Scale, Translation)
 
@@ -42,7 +48,10 @@ public:
 
     void setProgram(QOpenGLShaderProgram * prog);
     void setColor(QVector3D color);
+    void setScale(GLfloat scale);
     void setPosition(QVector3D position);
+    void setModel(QMatrix4x4 model);
+    void setRotation(QMatrix4x4 rotMat);
 
     QVector3D getColor();
     QMatrix4x4 getModel();
@@ -50,6 +59,7 @@ public:
 
     void scale(GLfloat scale);
     void rotate(GLfloat angle, QVector3D axis);
+    void rotate(QQuaternion quat);
     void rotateRawZ(GLfloat angle);
     void translate(QVector3D translate);
 

@@ -52,12 +52,9 @@ private:
     void initParam();
     void initGLDebugger();
 
-    void rotateFromID(uint id, GLfloat angle, QVector3D axis);
-    void animateGimbal(float time);
-    void animateA(float time);
-    void animateB(float time);
-    void animateC(float time);
-    void animateBall(float time);
+    void animateGimbal(float deltaTime);
+    void animateBall(float deltaTime);
+    void rotateGimbal();
 
 protected:
     void initializeGL();

@@ -13,6 +13,9 @@ Mesh::Mesh(QString filepath) {
     Q_UNUSED(success);
 
     m_model = QMatrix4x4();
+    m_scale = 1.0f;
+    m_position = QVector3D(0.0f, 0.0f, 0.0f);
+    m_rotation = QVector3D(0.0f, 0.0f, 0.0f);
 
     ModelLoader modelloader;
     if (!modelloader.loadObjectFromFile(filepath)) {
@@ -92,6 +95,16 @@ void Mesh::setColor(QVector3D color) {
     m_color = color;
 }
 
+void Mesh::setModel(QMatrix4x4 model) {
+    m_model = model;
+}
+
+void Mesh::setRotation(QMatrix4x4 rotMat) {
+    m_model = rotMat;
+    m_model.translate(m_position);
+    m_model.scale(m_scale);
+}
+
 QVector3D Mesh::getColor() {
     return m_color;
 }
@@ -110,6 +123,21 @@ void Mesh::scale(GLfloat scale) {
 
 void Mesh::rotate(GLfloat angle, QVector3D axis) {
     m_model.rotate(angle, axis);
+}
+
+void Mesh::rotate(QQuaternion quat) {
+    m_model.rotate(quat);
+}
+
+void Mesh::setScale(GLfloat scale) {
+    m_scale = scale;
+    QMatrix4x4 model;
+    model.rotate(m_rotation.x(), QVector3D(1,0,0));
+    model.rotate(m_rotation.y(), QVector3D(0,1,0));
+    model.rotate(m_rotation.z(), QVector3D(0,0,1));
+    model.translate(m_position);
+    model.scale(scale);
+    m_model = model;
 }
 
 void Mesh::setPosition(QVector3D position) {
