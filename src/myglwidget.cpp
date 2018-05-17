@@ -98,8 +98,7 @@ void MyGLWidget::initializeGL() {
     // Sphere
     m_ball = new Mesh(":/models/sphere.obj");
     m_ball->setProgram(m_prog_texture);
-    m_ball->setColor(QVector3D(1.0f, 1.0f, 1.0f));
-    m_ball->scale(0.1f);
+    m_ball->setScale(0.1f);
 
     m_skybox = new Skybox();
 
@@ -179,7 +178,7 @@ void MyGLWidget::paintGL() {
     animateBall(deltaTime);
 
     m_skybox->draw(projSkybox, view);
-    for (uint i=0; i<m_meshes.size(); i++) {
+    for (uint i = 0; i < m_meshes.size(); i++) {
         m_meshes[i]->draw(proj, view);
     }
     m_ball->draw(proj, view);
@@ -214,36 +213,20 @@ QVector3D changeColorTime(float time) {
 
 void MyGLWidget::animateBall(float deltaTime) {
     static float ballRotationTimer;
-    static float ballRotationX;
-    static float ballRotationY;
 
     ballRotationTimer += deltaTime*0.001;
     QVector3D position = QVector3D(0.85f*sin(ballRotationTimer), 0.85f*cos(ballRotationTimer), -0.16f);
 
-    ballRotationX = -sin(ballRotationTimer);
-    ballRotationY = -cos(ballRotationTimer);
-
-    /*
     QMatrix4x4 ballRotation;
-    ballRotation.translate(0.0f, 0.85f, 0.0f);
-    ballRotation.rotate(ballRotationTimer, QVector3D(0, 1, 0));
-    ballRotation.rotate(ballRotationTimer, QVector3D(1, 0, 0));
-    ballRotation.scale(0.1f);
-    */
-    QMatrix4x4 ballRotation;
-    ballRotation.rotate(ballRotationTimer, QVector3D(1, 0, 0));
-
-    m_ball->setModel(ballRotation);
-    m_ball->scale(0.1f);
-
-    m_ball->rotate(ballRotationTimer, QVector3D(1, 0, 0));
-    //m_ball->rotate(ballRotationY, QVector3D(0, 0, 1));
-    m_ball->rotate(0.01f , QVector3D(1, 0, 0));
+    ballRotation.rotate(-ballRotationTimer*1000, QVector3D(0,1,0));
+    QMatrix4x4 ballRotationOnGimbal;
+    ballRotationOnGimbal.rotate(-ballRotationTimer*62.8318530718*, QVector3D(0,0,1));
+    m_ball->setRotation(ballRotationOnGimbal * ballRotation);
 
     // Gimbal rotations
     QMatrix4x4 worldRotation;
-    worldRotation.rotate(m_RotationA, QVector3D(1.0f, 0.0f, 0.0f));
-    worldRotation.rotate(m_RotationB, QVector3D(0.0f, 1.0f, 0.0f));
+    worldRotation.rotate(m_RotationA, QVector3D(1, 0, 0));
+    worldRotation.rotate(m_RotationB, QVector3D(0, 1, 0));
     m_ball->setPosition(worldRotation * position);
 }
 

@@ -16,6 +16,7 @@ Mesh::Mesh(QString filepath) {
     m_scale = 1.0f;
     m_position = QVector3D(0.0f, 0.0f, 0.0f);
     m_rotation = QVector3D(0.0f, 0.0f, 0.0f);
+    m_color = QVector3D(1.0f, 1.0f, 1.0f);
 
     ModelLoader modelloader;
     if (!modelloader.loadObjectFromFile(filepath)) {
