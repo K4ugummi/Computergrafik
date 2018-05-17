@@ -159,9 +159,16 @@ void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 proj;
-    proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
+    if (m_IsProjPerspective)
+        proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
+    else
+        proj.ortho(-m_width/200, m_width/200, -m_height/200, m_height/200, m_Near, m_Far);
+
     QMatrix4x4 projSkybox;
-    projSkybox.perspective(m_FOV, (float)m_width / (float)m_height, 0.1f, 10000.0f);
+    if (m_IsProjPerspective)
+        projSkybox.perspective(m_FOV, (float)m_width / (float)m_height, 0.1f, 10000.0f);
+    else
+        projSkybox.ortho(-m_width/20, m_width/20, -m_height/20, m_height/20, 0.1f, 10000.0f);
 
     QMatrix4x4 view;
     if (m_AnimateCamera && m_meshes.size() >= 3) {
@@ -215,18 +222,21 @@ void MyGLWidget::animateBall(float deltaTime) {
     static float ballRotationTimer;
 
     ballRotationTimer += deltaTime*0.001;
-    QVector3D position = QVector3D(0.85f*sin(ballRotationTimer), 0.85f*cos(ballRotationTimer), -0.16f);
+    QVector3D position = QVector3D(
+                0.85f*sin(ballRotationTimer),
+                0.85f*cos(ballRotationTimer),
+                -0.16f);
 
     QMatrix4x4 ballRotation;
     ballRotation.rotate(-ballRotationTimer*1000, QVector3D(0,1,0));
     QMatrix4x4 ballRotationOnGimbal;
-    ballRotationOnGimbal.rotate(-ballRotationTimer*62.8318530718*, QVector3D(0,0,1));
-    m_ball->setRotation(ballRotationOnGimbal * ballRotation);
+    ballRotationOnGimbal.rotate(-ballRotationTimer * 3.14159265359 * 18, QVector3D(0,0,1));
 
     // Gimbal rotations
     QMatrix4x4 worldRotation;
     worldRotation.rotate(m_RotationA, QVector3D(1, 0, 0));
     worldRotation.rotate(m_RotationB, QVector3D(0, 1, 0));
+    m_ball->setRotation(worldRotation * ballRotationOnGimbal * ballRotation);
     m_ball->setPosition(worldRotation * position);
 }
 
@@ -240,10 +250,12 @@ void MyGLWidget::setAngle(int value) {
 
 void MyGLWidget::setProjPerspective() {
     m_IsProjPerspective = true;
+    qDebug() << m_IsProjPerspective;
 }
 
 void MyGLWidget::setProjOrthogonal() {
     m_IsProjPerspective = false;
+    qDebug() << m_IsProjPerspective;
 }
 
 void MyGLWidget::setNear(double value) {
