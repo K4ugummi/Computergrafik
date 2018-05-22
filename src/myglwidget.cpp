@@ -7,6 +7,7 @@
 #include <QMetaEnum>
 #include <QSurfaceFormat>
 #include <QImage>
+#include <QtMath>
 
 #define OFS(s, a) reinterpret_cast<void* const>(offsetof(s, a))
 
@@ -159,16 +160,15 @@ void MyGLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 proj;
-    if (m_IsProjPerspective)
-        proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
-    else
-        proj.ortho(-m_width/200, m_width/200, -m_height/200, m_height/200, m_Near, m_Far);
-
     QMatrix4x4 projSkybox;
-    if (m_IsProjPerspective)
+    if (m_IsProjPerspective) {
+        proj.perspective(m_FOV, (float)m_width / (float)m_height, m_Near, m_Far);
         projSkybox.perspective(m_FOV, (float)m_width / (float)m_height, 0.1f, 10000.0f);
-    else
+    }
+    else {
+        proj.ortho(-m_width/200, m_width/200, -m_height/200, m_height/200, m_Near, m_Far);
         projSkybox.ortho(-m_width/20, m_width/20, -m_height/20, m_height/20, 0.1f, 10000.0f);
+    }
 
     QMatrix4x4 view;
     if (m_AnimateCamera && m_meshes.size() >= 3) {
@@ -215,22 +215,30 @@ void MyGLWidget::animateGimbal(float deltaTime) {
 }
 
 QVector3D changeColorTime(float time) {
-
+    float colorValue = time;
 }
 
 void MyGLWidget::animateBall(float deltaTime) {
-    static float ballRotationTimer;
+    static double ballRotationTimer;
 
     ballRotationTimer += deltaTime*0.001;
+    if (ballRotationTimer > 2 * M_PI) {
+        ballRotationTimer = 0.0;
+    }
+    qDebug() << ballRotationTimer;
+
     QVector3D position = QVector3D(
-                0.85f*sin(ballRotationTimer),
-                0.85f*cos(ballRotationTimer),
-                -0.16f);
+                0.85f*qSin(ballRotationTimer),
+                0.85f*qCos(ballRotationTimer),
+                -0.17f);
+
+    //float angle = qAcos(position.y() / position.length());
+    float angle = - ballRotationTimer * M_PI * 18;
 
     QMatrix4x4 ballRotation;
     ballRotation.rotate(-ballRotationTimer*1000, QVector3D(0,1,0));
     QMatrix4x4 ballRotationOnGimbal;
-    ballRotationOnGimbal.rotate(-ballRotationTimer * 3.14159265359 * 18, QVector3D(0,0,1));
+    ballRotationOnGimbal.rotate(angle, QVector3D(0,0,1));
 
     // Gimbal rotations
     QMatrix4x4 worldRotation;
