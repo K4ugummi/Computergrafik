@@ -215,17 +215,20 @@ void MyGLWidget::animateGimbal(float deltaTime) {
 }
 
 QVector3D changeColorTime(float time) {
-    float colorValue = time;
+    QVector3D color;
+    color.setX(qMax(qCos(time), 0.0));
+    color.setY(qMax(qCos(time-2*M_PI/3), 0.0));
+    color.setZ(qMax(qCos(time-4*M_PI/3), 0.0));
+    return color;
 }
 
 void MyGLWidget::animateBall(float deltaTime) {
     static double ballRotationTimer;
 
     ballRotationTimer += deltaTime*0.001;
-    if (ballRotationTimer > 2 * M_PI) {
+    if (ballRotationTimer >= 2 * M_PI) {
         ballRotationTimer = 0.0;
     }
-    qDebug() << ballRotationTimer;
 
     QVector3D position = QVector3D(
                 0.85f*qSin(ballRotationTimer),
@@ -233,7 +236,7 @@ void MyGLWidget::animateBall(float deltaTime) {
                 -0.17f);
 
     //float angle = qAcos(position.y() / position.length());
-    float angle = - ballRotationTimer * M_PI * 18;
+    float angle = - ballRotationTimer * M_PI * 18; // Don't ask me why....
 
     QMatrix4x4 ballRotation;
     ballRotation.rotate(-ballRotationTimer*1000, QVector3D(0,1,0));
@@ -246,6 +249,8 @@ void MyGLWidget::animateBall(float deltaTime) {
     worldRotation.rotate(m_RotationB, QVector3D(0, 1, 0));
     m_ball->setRotation(worldRotation * ballRotationOnGimbal * ballRotation);
     m_ball->setPosition(worldRotation * position);
+
+    m_ball->setColor(changeColorTime(ballRotationTimer));
 }
 
 void MyGLWidget::setFOV(int value) {
