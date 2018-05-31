@@ -22,8 +22,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Assimp folder needs to be one directory up on windows.
 win32 {
     message(Target: win32)
-    LIBS += -L../assimp-mingw32-4.1.0/bin -lassimp
-    INCLUDEPATH += ../assimp-mingw32-4.1.0/include
+    LIBS += -L../ComputerGrafik/3rd/assimp-mingw32-4.1.0/bin -lassimp
+    INCLUDEPATH += ../ComputerGrafik/3rd/assimp-mingw32-4.1.0/include
 } unix {
     message(Target: unix)
     CONFIG += link_pkgconfig
