@@ -15,5 +15,7 @@
         <file>textures/skybox/left.jpg</file>
         <file>textures/skybox/right.jpg</file>
         <file>textures/skybox/top.jpg</file>
+        <file>shader/phong.frag</file>
+        <file>shader/phong.vert</file>
     </qresource>
 </RCC>
