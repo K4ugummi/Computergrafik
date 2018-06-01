@@ -5,6 +5,8 @@
 #ifndef MY_MESH_H
 #define MY_MESH_H
 
+#include "vertex.h"
+#include "material.h"
 #include "modelloaderh.h"
 
 #include <vector>
@@ -12,12 +14,6 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QImage>
-
-struct Vertex {
-    GLfloat position[3];
-    GLfloat normal[3];
-    GLfloat uv[2];
-};
 
 class Mesh : QOpenGLFunctions_3_3_Core {
 private:
@@ -32,6 +28,7 @@ private:
     // Additional Color that is multiplied with the texture.
     // Set to (1.0f, 1.0f, 1.0f) for texture only
     QVector3D m_color;
+    Material m_material;
 
     GLfloat m_scale;        // Scaling factor.
     QVector3D m_position;   // Position in World space.
