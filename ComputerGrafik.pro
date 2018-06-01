@@ -47,7 +47,9 @@ HEADERS += \
     src/myglwidget.h \
     src/mesh.h \
     src/modelloaderh.h \
-    src/skybox.h
+    src/skybox.h \
+    src/vertex.h \
+    src/material.h
 
 FORMS += \
     ui/mainwindow.ui
