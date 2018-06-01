@@ -65,40 +65,44 @@ void MyGLWidget::initializeGL() {
     m_prog->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
     m_prog->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample.frag");
     m_prog->link();
+    Q_ASSERT(m_prog->isLinked());
 
     m_prog_texture = new QOpenGLShaderProgram();
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/sample.vert");
     m_prog_texture->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/sample_texture.frag");
     m_prog_texture->link();
-
-    Q_ASSERT(m_prog->isLinked());
     Q_ASSERT(m_prog_texture->isLinked());
+
+    m_prog_phong = new QOpenGLShaderProgram();
+    m_prog_phong->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shader/phong.vert");
+    m_prog_phong->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shader/phong.frag");
+    m_prog_phong->link();
+    Q_ASSERT(m_prog_phong->isLinked());
 
     // Outer Gimbal
     Mesh * mesh = new Mesh(":/models/gimbal.obj");
-    mesh->rotateRawZ(1.570796f);
-    mesh->setProgram(m_prog_texture);
-    mesh->setColor(QVector3D(1.0f, 0.3f, 0.3f));
+    mesh->setProgram(m_prog_phong);
+    mesh->setMaterial(Materials::PlasticBlack);
     m_meshes.push_back(mesh);
 
     // Middle Gimbal
     Mesh * mesh2 = new Mesh(":/models/gimbal.obj");
-    mesh2->setProgram(m_prog_texture);
-    mesh2->setColor(QVector3D(0.3f, 1.0f, 0.3f));
+    mesh2->setProgram(m_prog_phong);
+    mesh2->setMaterial(Materials::PlasticRed);
     mesh2->setScale(0.85f);
     m_meshes.push_back(mesh2);
 
     // Inner Gimbal
     Mesh * mesh3 = new Mesh(":/models/gimbal.obj");
-    mesh3->rotateRawZ(1.570796f);
-    mesh3->setProgram(m_prog_texture);
-    mesh3->setColor(QVector3D(0.3f, 0.3f, 1.0f));
+    mesh3->setProgram(m_prog_phong);
+    mesh3->setMaterial(Materials::PlasticYellow);
     mesh3->setScale(0.72f);
     m_meshes.push_back(mesh3);
 
     // Sphere
     m_ball = new Mesh(":/models/sphere.obj");
-    m_ball->setProgram(m_prog_texture);
+    m_ball->setProgram(m_prog_phong);
+    m_ball->setMaterial(Materials::Jade);
     m_ball->setScale(0.1f);
 
     m_skybox = new Skybox();
@@ -111,6 +115,7 @@ MyGLWidget::~MyGLWidget() {
 
     delete m_prog;
     delete m_prog_texture;
+    delete m_prog_phong;
 
     delete m_skybox;
     delete m_ball;
@@ -185,10 +190,11 @@ void MyGLWidget::paintGL() {
     animateBall(deltaTime);
 
     m_skybox->draw(projSkybox, view);
+    QMatrix4x4 viewProjMat = proj * view;
     for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->draw(proj, view);
+        m_meshes[i]->draw(viewProjMat, m_CameraPos);
     }
-    m_ball->draw(proj, view);
+    m_ball->draw(viewProjMat, m_CameraPos);
 
     // Scedule this widget for repainting.
     update();
@@ -350,5 +356,6 @@ void MyGLWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void MyGLWidget::onOGLMessage(QOpenGLDebugMessage message) {
-    qDebug() << message;
+    if (message.severity() != QOpenGLDebugMessage::LowSeverity)
+        qDebug() << message;
 }

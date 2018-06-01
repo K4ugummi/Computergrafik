@@ -9,7 +9,7 @@
 #include "skybox.h"
 
 #include <QOpenGLShaderProgram>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLWidget>
 #include <QKeyEvent>
 #include <QOpenGLDebugLogger>
@@ -19,7 +19,7 @@
 
 #include <vector>
 
-class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_3_3_Core {
+class MyGLWidget : public QOpenGLWidget, QOpenGLFunctions_4_3_Core {
     Q_OBJECT
 
 private:
@@ -44,10 +44,8 @@ private:
     Skybox * m_skybox;
     std::vector<Mesh*> m_meshes;    // Gimbal
     Mesh * m_ball;                  // Ball
-                                    // Not a nice solution ;(
 
-    QOpenGLShaderProgram * m_prog;
-    QOpenGLShaderProgram * m_prog_texture;
+    QOpenGLShaderProgram * m_prog, * m_prog_texture, * m_prog_phong;
 
     void initParam();
     void initGLDebugger();

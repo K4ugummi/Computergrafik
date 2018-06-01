@@ -8,14 +8,14 @@
 #include <vector>
 
 #include <QOpenGLShaderProgram>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QImage>
 
 struct SkyBoxVertex {
     GLfloat position[3];
 };
 
-class Skybox : QOpenGLFunctions_3_3_Core {
+class Skybox : QOpenGLFunctions_4_3_Core {
 private:
     std::vector<GLfloat> m_vertices;
 

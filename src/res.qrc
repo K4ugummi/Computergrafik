@@ -4,7 +4,6 @@
         <file>shader/sample.vert</file>
         <file>textures/sample_texture.jpg</file>
         <file>shader/sample_texture.frag</file>
-        <file>models/gimbal.obj</file>
         <file>models/sphere.obj</file>
         <file>textures/gimbal_wood.jpg</file>
         <file>shader/skybox.frag</file>
@@ -17,5 +16,7 @@
         <file>textures/skybox/top.jpg</file>
         <file>shader/phong.frag</file>
         <file>shader/phong.vert</file>
+        <file>models/gimbal.obj</file>
+        <file>models/gimbal_highres.obj</file>
     </qresource>
 </RCC>

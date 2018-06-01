@@ -12,10 +12,10 @@
 #include <vector>
 
 #include <QOpenGLShaderProgram>
-#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
 #include <QImage>
 
-class Mesh : QOpenGLFunctions_3_3_Core {
+class Mesh : QOpenGLFunctions_4_3_Core {
 private:
     std::vector<Vertex> m_vertices;
     std::vector<GLuint> m_indices;
@@ -45,6 +45,7 @@ public:
 
     void setProgram(QOpenGLShaderProgram * prog);
     void setColor(QVector3D color);
+    void setMaterial(Material mat);
     void setScale(GLfloat scale);
     void setPosition(QVector3D position);
     void setModel(QMatrix4x4 model);
@@ -60,7 +61,7 @@ public:
     void rotateRawZ(GLfloat angle);
     void translate(QVector3D translate);
 
-    void draw(const QMatrix4x4 &projection, const QMatrix4x4 &view);
+    void draw(const QMatrix4x4 &viewProj, const QVector3D &viewPos);
 };
 
 #endif // MY_MESH_H

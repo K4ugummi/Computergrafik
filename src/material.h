@@ -1,10 +1,12 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+#include <QVector3D>
+
 struct Material {
-    float ambient[3];
-    float diffuse[3];
-    float specular[3];
+    QVector3D ambient;
+    QVector3D diffuse;
+    QVector3D specular;
     float shininess;
 };
 
@@ -35,6 +37,28 @@ const Material RubberRed = Material{ { 0.05, 0.0, 0.0 }, { 0.5, 0.4, 0.4 }, { 0.
 const Material RubberWhite = Material{ { 0.05, 0.05, 0.05 }, { 0.5, 0.5, 0.5 }, { 0.7, 0.7, 0.7 }, .078125, };
 const Material RubberYellow = Material{ { 0.05, 0.05, 0.0 }, { 0.5, 0.5, 0.4 }, { 0.7, 0.7, 0.04 }, .078125, };
 
-}
+} // Materials
+
+namespace IOR {
+
+// Gases
+const float Air = 1.0;
+const float Gas = 1.0;
+
+// Liquids
+const float Water = 1.333;
+const float Ethanol = 1.36;
+const float OliveOil = 1.47;
+
+// Solids
+const float Ice = 1.31;
+const float PMMA = 1.49;
+const float WindowGlass = 1.52;
+const float Polycarbonate = 1.58;
+const float FlintGlass = 1.62;
+const float Sapphire = 1.77;
+const float Diamond = 2.42;
+
+} // IOR
 
 #endif // MATERIAL_H
