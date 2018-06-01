@@ -1,13 +1,11 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <QOpenGLFunctions_3_3_Core>
-
 struct Material {
-    GLfloat ambient[3];
-    GLfloat diffuse[3];
-    GLfloat specular[3];
-    GLfloat shininess;
+    float ambient[3];
+    float diffuse[3];
+    float specular[3];
+    float shininess;
 };
 
 namespace Materials {
