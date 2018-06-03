@@ -20,9 +20,7 @@ const QVector3D MYQV_LEFT = QVector3D(0.0f, 0.0f, -1.0f);
 const QVector3D MYQV_RIGHT = QVector3D(0.0f, 0.0f, 1.0f);
 
 // Contructor of a customizable OpenGL widget.
-MyGLWidget::MyGLWidget(QWidget * parent)
-    : QOpenGLWidget(parent)
-{
+MyGLWidget::MyGLWidget(QWidget * parent) : QOpenGLWidget(parent) {
     initParam();
 }
 
@@ -41,7 +39,7 @@ void MyGLWidget::initParam() {
     m_AnimateCamera     = false;
     m_AnimateGimbal     = false;
 
-    m_CameraPos = QVector3D(0.0f, 0.0f, -5.0f);
+    m_Camera.windowResize(m_width, m_height);
 }
 
 // Initialize OpenGL helper functions
@@ -79,16 +77,18 @@ void MyGLWidget::initializeGL() {
     m_prog_phong->link();
     Q_ASSERT(m_prog_phong->isLinked());
 
+    initLights();
+
     // Outer Gimbal
     Mesh * mesh = new Mesh(":/models/gimbal.obj");
     mesh->setProgram(m_prog_phong);
-    mesh->setMaterial(Materials::PlasticBlack);
+    mesh->setMaterial(Materials::PlasticRed);
     m_meshes.push_back(mesh);
 
     // Middle Gimbal
     Mesh * mesh2 = new Mesh(":/models/gimbal.obj");
     mesh2->setProgram(m_prog_phong);
-    mesh2->setMaterial(Materials::PlasticRed);
+    mesh2->setMaterial(Materials::PlasticGreen);
     mesh2->setScale(0.85f);
     m_meshes.push_back(mesh2);
 
@@ -102,7 +102,7 @@ void MyGLWidget::initializeGL() {
     // Sphere
     m_ball = new Mesh(":/models/sphere.obj");
     m_ball->setProgram(m_prog_phong);
-    m_ball->setMaterial(Materials::Jade);
+    m_ball->setMaterial(Materials::RubberGreen);
     m_ball->setScale(0.1f);
 
     m_skybox = new Skybox();
@@ -117,6 +117,7 @@ MyGLWidget::~MyGLWidget() {
     delete m_prog_texture;
     delete m_prog_phong;
 
+    glDeleteBuffers(1, &m_uboLights);
     delete m_skybox;
     delete m_ball;
     for(uint i = 0; i < m_meshes.size(); i++) {
@@ -151,11 +152,106 @@ void MyGLWidget::initGLDebugger() {
     qDebug() << "  Swap Interval:" << fmt.swapInterval();
 }
 
+void MyGLWidget::initLights() {
+    // Yellow light
+    m_lightSource[0] = LightSource {
+        { 2.0, 0.0, 2.0, }, // position
+        -1.0,               // pad0
+        { 1.0, 1.0, 0.0, }, // color
+        -1.0,               // pad1
+        0.8,                // ka
+        0.8,                // kd
+        1.0,                // ks
+        -1.0,               // pad2
+        1.0,                // constant
+        0.22,               // linear
+        0.2,                // quadratic
+        -1.0,               // pad3
+    };
+
+    // Blue light
+    m_lightSource[1] = LightSource {
+        { 0.0, 2.0, 2.0 },  // position
+        -1.0,               // pad0
+        { 0.0, 0.0, 1.0, }, // color
+        -1.0,               // pad1
+        0.8,                // ka
+        0.8,                // kd
+        1.0,                // ks
+        -1.0,               // pad2
+        1.0,                // constant
+        0.22,               // linear
+        0.2,                // quadratic
+        -1.0,               // pad3
+    };
+
+    // White light
+    m_lightSource[2] = LightSource {
+        { 0.0, 0.0, 0.0, }, // position
+        -1.0,               // pad0
+        { 1.0, 1.0, 0.0, }, // color
+        -1.0,               // pad1
+        0.1,                // ka
+        0.1,                // kd
+        0.1,                // ks
+        -1.0,               // pad2
+        1.0,                // constant
+        0.7,                // linear
+        1.8,                // quadratic
+        -1.0,               // pad3
+    };
+
+    // Purple light
+    m_lightSource[3] = LightSource {
+        { -2.0, 0.0, -2.0, },// position
+        -1.0,               // pad0
+        { 0.5, 1.0, 0.5, }, // color
+        -1.0,               // pad1
+        0.8,                // ka
+        0.8,                // kd
+        1.0,                // ks
+        -1.0,               // pad2
+        1.0,                // constant
+        0.22,               // linear
+        0.2,                // quadratic
+        -1.0,               // pad3
+    };
+
+    // Red light
+    m_lightSource[4] = LightSource {
+        { 0.25, -1.25, -0.25, }, // position
+        -1.0,               // pad0
+        { 1.0, 0.0, 0.0, },  // color
+        -1.0,               // pad1
+        0.8,                // ka
+        0.8,                // kd
+        1.0,                // ks
+        -1.0,               // pad2
+        1.0,                // constant
+        0.22,               // linear
+        0.2,                // quadratic
+        -1.0,               // pad3
+    };
+
+    for (uint i = 0; i < NUM_LIGHTS; i++) {
+        m_lightSource[i].constant = 1.0;
+        m_lightSource[i].linear = 0.022;
+        m_lightSource[i].quadratic = 0.0019;
+    }
+
+    glGenBuffers(1, &m_uboLights);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
+    glBufferData(GL_UNIFORM_BUFFER, NUM_LIGHTS * sizeof(LightSource), nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uboLights);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
 // Resize callback function for MyGLWidget.
 // Is called autiomatically by QT.
 void MyGLWidget::resizeGL(int width, int height) {
     m_width = width;
     m_height = height;
+    m_Camera.windowResize(width, height);
 }
 
 //
@@ -176,11 +272,14 @@ void MyGLWidget::paintGL() {
     }
 
     QMatrix4x4 view;
+    QVector3D position;
     if (m_AnimateCamera && m_meshes.size() >= 3) {
         view = m_meshes[2]->getModel().inverted();
+        position = QVector3D(0, 0, 0);
     }
     else {
-        view.lookAt(m_CameraPos, QVector3D(0,0,0), MYQV_UP);
+        view = m_Camera.getViewMatrix();
+        position = m_Camera.getPosition();
     }
 
     if (m_AnimateGimbal) {
@@ -189,27 +288,37 @@ void MyGLWidget::paintGL() {
 
     animateBall(deltaTime);
 
+    // Lights
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
+    // Calculate light positions.
+    // TODO: ...
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_uboLights);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(m_lightSource), &m_lightSource);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    // Draw Skybox
     m_skybox->draw(projSkybox, view);
-    QMatrix4x4 viewProjMat = proj * view;
+
+    // Draw meshes
     for (uint i = 0; i < m_meshes.size(); i++) {
-        m_meshes[i]->draw(viewProjMat, m_CameraPos);
+        m_meshes[i]->draw(view, proj, position);
     }
-    m_ball->draw(viewProjMat, m_CameraPos);
+    m_ball->draw(view, proj, position);
 
     // Scedule this widget for repainting.
     update();
 }
 
 void MyGLWidget::animateGimbal(float deltaTime) {
-    m_RotationA += deltaTime * 0.1;
+    m_RotationA += deltaTime * 0.05f;
     if (m_RotationA >= 360.0f)
         m_RotationA -= 360.0f;
 
-    m_RotationB += deltaTime * 0.07;
+    m_RotationB += deltaTime * 0.1f;
     if (m_RotationB >= 360.0f)
         m_RotationB -= 360.0f;
 
-    m_RotationC += deltaTime * 0.05;
+    m_RotationC += deltaTime * 0.15f;
     if (m_RotationC >= 360.0f)
         m_RotationC -= 360.0f;
 
@@ -245,7 +354,7 @@ void MyGLWidget::animateBall(float deltaTime) {
     float angle = - ballRotationTimer * M_PI * 18; // Don't ask me why....
 
     QMatrix4x4 ballRotation;
-    ballRotation.rotate(-ballRotationTimer*1000, QVector3D(0,1,0));
+    ballRotation.rotate(-ballRotationTimer*180*M_PI, QVector3D(0,1,0));
     QMatrix4x4 ballRotationOnGimbal;
     ballRotationOnGimbal.rotate(angle, QVector3D(0,0,1));
 
@@ -269,12 +378,10 @@ void MyGLWidget::setAngle(int value) {
 
 void MyGLWidget::setProjPerspective() {
     m_IsProjPerspective = true;
-    qDebug() << m_IsProjPerspective;
 }
 
 void MyGLWidget::setProjOrthogonal() {
     m_IsProjPerspective = false;
-    qDebug() << m_IsProjPerspective;
 }
 
 void MyGLWidget::setNear(double value) {
@@ -328,31 +435,34 @@ void MyGLWidget::setAnimateGimbal(bool value) {
     m_AnimateGimbal = value;
 }
 
-void MyGLWidget::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Escape) {
-        //qDebug("MyGLWidget::keyPressEvent(Key_Escape)");
-    }
-    else if (event->key() == Qt::Key_W || event->key() == Qt::Key_Up) {
-        //qDebug("MyGLWidget::keyPressEvent(Key_W|Key_Up)");
-        m_CameraPos += MYQV_FRONT * 0.2f;
-    }
-    else if (event->key() == Qt::Key_A || event->key() == Qt::Key_Left) {
-        //qDebug("MyGLWidget::keyPressEvent(Key_A|Key_Left)");
-        m_CameraPos += MYQV_LEFT * 0.2f;
-    }
-    else if (event->key() == Qt::Key_S || event->key() == Qt::Key_Down) {
-        //qDebug("MyGLWidget::keyPressEvent(Key_S|Key_Down)");
-        m_CameraPos += MYQV_BACK * 0.2f;
-    }
-    else if (event->key() == Qt::Key_D || event->key() == Qt::Key_Right) {
-        //qDebug("MyGLWidget::keyPressEvent(Key_D|Key_Right)");
-        m_CameraPos += MYQV_RIGHT * 0.2f;
-    }
-    else {
-        QOpenGLWidget::keyPressEvent(event);
-    }
-    qDebug("MyGLWidget::m_CameraPos(%.1f, %.1f, %.1f)",
-           m_CameraPos.x(), m_CameraPos.y(), m_CameraPos.z());
+void MyGLWidget::keyPressEvent(QKeyEvent * event) {
+    m_Camera.keyPressEvent(event);
+    QOpenGLWidget::keyPressEvent(event);
+}
+
+void MyGLWidget::keyReleaseEvent(QKeyEvent * event) {
+    m_Camera.keyReleaseEvent(event);
+    QOpenGLWidget::keyReleaseEvent(event);
+}
+
+void MyGLWidget::mouseMoveEvent(QMouseEvent * event) {
+    m_Camera.mouseMoveEvent(event);
+    QOpenGLWidget::mouseMoveEvent(event);
+}
+
+void MyGLWidget::mousePressEvent(QMouseEvent * event) {
+    m_Camera.mousePressEvent(event);
+    QOpenGLWidget::mousePressEvent(event);
+}
+
+void MyGLWidget::mouseReleaseEvent(QMouseEvent * event) {
+    m_Camera.mouseReleaseEvent(event);
+    QOpenGLWidget::mouseReleaseEvent(event);
+}
+
+void MyGLWidget::wheelEvent(QWheelEvent * event) {
+    m_Camera.wheelEvent(event);
+    QOpenGLWidget::wheelEvent(event);
 }
 
 void MyGLWidget::onOGLMessage(QOpenGLDebugMessage message) {

@@ -7,11 +7,14 @@
 
 #include "mesh.h"
 #include "skybox.h"
+#include "lights.h"
+#include "camera.h"
 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions_4_3_Core>
 #include <QOpenGLWidget>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QOpenGLDebugLogger>
 #include <QOpenGLDebugMessage>
 #include <QOpenGLBuffer>
@@ -36,7 +39,7 @@ private:
     QElapsedTimer m_timer;
 
     // Camera values.
-    QVector3D m_CameraPos;
+    Camera m_Camera;
 
     // OpenGL
     QOpenGLDebugLogger * m_debuglogger;
@@ -46,9 +49,12 @@ private:
     Mesh * m_ball;                  // Ball
 
     QOpenGLShaderProgram * m_prog, * m_prog_texture, * m_prog_phong;
+    LightSource m_lightSource[NUM_LIGHTS];
+    GLuint m_uboLights;
 
     void initParam();
     void initGLDebugger();
+    void initLights();
 
     void animateGimbal(float deltaTime);
     void animateBall(float deltaTime);
@@ -59,7 +65,12 @@ protected:
     void resizeGL(int width, int height);
     void paintGL();
 
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent * event);
+    void mouseMoveEvent(QMouseEvent * event);
+    void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
+    void wheelEvent(QWheelEvent * event);
 
 public:
     MyGLWidget(QWidget * parent);

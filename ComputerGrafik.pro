@@ -40,7 +40,8 @@ SOURCES += \
     src/mainwindow.cpp \
     src/myglwidget.cpp \
     src/mesh.cpp \
-    src/skybox.cpp
+    src/skybox.cpp \
+    src/camera.cpp
 
 HEADERS += \
     src/mainwindow.h \
@@ -49,7 +50,9 @@ HEADERS += \
     src/modelloaderh.h \
     src/skybox.h \
     src/vertex.h \
-    src/material.h
+    src/material.h \
+    src/lights.h \
+    src/camera.h
 
 FORMS += \
     ui/mainwindow.ui

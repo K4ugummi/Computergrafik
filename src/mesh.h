@@ -61,7 +61,7 @@ public:
     void rotateRawZ(GLfloat angle);
     void translate(QVector3D translate);
 
-    void draw(const QMatrix4x4 &viewProj, const QVector3D &viewPos);
+    void draw(const QMatrix4x4 &view, const QMatrix4x4 &proj, const QVector3D &viewPos);
 };
 
 #endif // MY_MESH_H

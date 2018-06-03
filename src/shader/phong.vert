@@ -10,13 +10,15 @@ layout (location = 0) out vec3 vFragPos;
 layout (location = 1) out vec3 vNormal;
 layout (location = 2) out vec2 vUV;
 
-layout (location = 0) uniform mat4 uMVP;
+layout (location = 0) uniform mat4 uModelMat;
+layout (location = 1) uniform mat4 uViewMat;
+layout (location = 2) uniform mat4 uProjectionMat;
+layout (location = 3) uniform mat4 uNormalMat;
 
 void main() {
-
-    vFragPos = aPosition;
-    vNormal = normalize(aNormal);
+    vFragPos = vec3(uViewMat * uModelMat * vec4(aPosition, 1.0f));
+    vNormal = normalize(mat3(uNormalMat) * aNormal);
     vUV = aUV;
 
-    gl_Position = uMVP * vec4(aPosition, 1.0f);
+    gl_Position = uProjectionMat * uViewMat * uModelMat * vec4(aPosition, 1.0f);
 }

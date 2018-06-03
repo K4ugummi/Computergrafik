@@ -168,7 +168,7 @@ void Mesh::translate(QVector3D translate) {
     m_model.translate(translate);
 }
 
-void Mesh::draw(const QMatrix4x4 &viewProj, const QVector3D &viewPos) {
+void Mesh::draw(const QMatrix4x4 &view, const QMatrix4x4 &proj, const QVector3D &viewPos) {
     Q_ASSERT(m_prog->isLinked());
 
     glBindVertexArray(m_vao);
@@ -177,37 +177,17 @@ void Mesh::draw(const QMatrix4x4 &viewProj, const QVector3D &viewPos) {
     glBindTexture(GL_TEXTURE_2D, m_tex);
 
     m_prog->bind();
-    m_prog->setUniformValue(0, viewProj * m_model);
-    m_prog->setUniformValue(1, m_model.inverted().transposed());
+    m_prog->setUniformValue(0, m_model);
+    m_prog->setUniformValue(1, view);
+    m_prog->setUniformValue(2, proj);
+    m_prog->setUniformValue(3, (view * m_model).inverted().transposed());
 
     m_prog->setUniformValue(8, viewPos);
-    m_prog->setUniformValue(9, QVector3D(2.0f, 2.0f, -3.0f));
-
-    QVector3D ambient = QVector3D(0.135, 0.2225, 0.1575);
-    QVector3D diffuse = QVector3D(0.54, 0.89, 0.63);
-    QVector3D specular = QVector3D(0.316228, 0.316228, 0.316228);
-    float shininess = 1;
 
     m_prog->setUniformValue(10, m_material.ambient);
     m_prog->setUniformValue(11, m_material.diffuse);
     m_prog->setUniformValue(12, m_material.specular);
     m_prog->setUniformValue(13, m_material.shininess);
-
-    /*
-    m_prog->setUniformValue(10, m_material.ambient[0]);
-    m_prog->setUniformValue(11, m_material.ambient[1]);
-    m_prog->setUniformValue(12, m_material.ambient[2]);
-
-    m_prog->setUniformValue(13, m_material.diffuse[0]);
-    m_prog->setUniformValue(14, m_material.diffuse[1]);
-    m_prog->setUniformValue(15, m_material.diffuse[2]);
-
-    m_prog->setUniformValue(16, m_material.specular[0]);
-    m_prog->setUniformValue(17, m_material.specular[1]);
-    m_prog->setUniformValue(18, m_material.specular[2]);
-
-    m_prog->setUniformValue(19, m_material.shininess);
-    */
 
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
