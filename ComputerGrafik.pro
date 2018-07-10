@@ -39,7 +39,6 @@ SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/myglwidget.cpp \
-    src/mesh.cpp \
     src/skybox.cpp \
     src/camera.cpp \
     src/meshoproom.cpp
@@ -47,7 +46,6 @@ SOURCES += \
 HEADERS += \
     src/mainwindow.h \
     src/myglwidget.h \
-    src/mesh.h \
     src/modelloaderh.h \
     src/skybox.h \
     src/vertex.h \

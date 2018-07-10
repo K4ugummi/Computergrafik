@@ -91,6 +91,38 @@ void MyGLWidget::initializeGL() {
     roof->setProgram(m_prog);
     m_meshes.push_back(roof);
 
+    MeshOPRoom * table = new MeshOPRoom("table");
+    table->setProgram(m_prog);
+    m_meshes.push_back(table);
+
+    MeshOPRoom * homer = new MeshOPRoom("homer");
+    homer->setProgram(m_prog);
+    m_meshes.push_back(homer);
+
+    MeshOPRoom * name = new MeshOPRoom("name");
+    name->setProgram(m_prog);
+    m_meshes.push_back(name);
+
+    MeshOPRoom * notausgang = new MeshOPRoom("notausgang");
+    notausgang->setProgram(m_prog);
+    m_meshes.push_back(notausgang);
+
+    MeshOPRoom * xray = new MeshOPRoom("xray");
+    xray->setProgram(m_prog);
+    m_meshes.push_back(xray);
+
+    MeshOPRoom * protection = new MeshOPRoom("protection");
+    protection->setProgram(m_prog);
+    m_meshes.push_back(protection);
+
+    MeshOPRoom * door = new MeshOPRoom("door");
+    door->setProgram(m_prog);
+    m_meshes.push_back(door);
+
+    MeshOPRoom * curtain = new MeshOPRoom("curtain");
+    curtain->setProgram(m_prog);
+    m_meshes.push_back(curtain);
+
     m_skybox = new Skybox();
 }
 
@@ -161,7 +193,6 @@ void MyGLWidget::paintGL() {
     for (uint i = 0; i < m_meshes.size(); i++) {
         m_meshes[i]->draw(view, proj, position);
     }
-    //m_ball->draw(view, proj, position);
 
     // Scedule this widget for repainting.
     update();

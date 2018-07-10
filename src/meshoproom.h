@@ -26,6 +26,7 @@ private:
     GLuint m_tex_diffuse;   // Texture
     GLuint m_tex_specular;
     GLuint m_tex_normal;
+    GLuint m_tex_emission;
 
     // Additional Color that is multiplied with the texture.
     // Set to (1.0f, 1.0f, 1.0f) for texture only

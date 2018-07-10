@@ -25,7 +25,6 @@ MeshOPRoom::MeshOPRoom(QString objectName) {
     std::vector<GLfloat> vbo;
     vbo.reserve(modelloader.lengthOfVBO());
     modelloader.genVBO(vbo.data());
-    Q_ASSERT(vbo.capacity() % 8 == 0);
 
     for (uint i = 0; i < modelloader.lengthOfVBO(); i += 14 ) {
         uint n = i;
@@ -76,19 +75,23 @@ MeshOPRoom::MeshOPRoom(QString objectName) {
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), OFS(Vertex, bitangent));
 
     // TEX BIND
-    QImage img_diffuse, img_specular, img_normal;
+    QImage img_diffuse, img_specular, img_normal, img_emission;
 
-    img_diffuse.load(":/textures/" + objectName + "_diffuse_2k.jpg");
+    img_diffuse.load("../Computergrafik/src/textures/" + objectName + "_diffuse_2k.jpg");
     Q_ASSERT(!img_diffuse.isNull());
     img_diffuse = img_diffuse.mirrored(false, true);
 
-    img_specular.load(":/textures/" + objectName + "_specular_2k.jpg");
+    img_specular.load("../Computergrafik/src/textures/" + objectName + "_specular_2k.jpg");
     Q_ASSERT(!img_diffuse.isNull());
     img_specular = img_specular.mirrored(false, true);
 
-    img_normal.load(":/textures/" + objectName + "_normal_2k.jpg");
+    img_normal.load("../Computergrafik/src/textures/" + objectName + "_normal_2k.jpg");
     Q_ASSERT(!img_diffuse.isNull());
     img_normal = img_normal.mirrored(false, true);
+
+    img_emission.load("../Computergrafik/src/textures/" + objectName + "_emission_2k.jpg");
+    Q_ASSERT(!img_emission.isNull());
+    img_emission = img_emission.mirrored(false, true);
 
     glGenTextures(1, &m_tex_diffuse);
     glBindTexture(GL_TEXTURE_2D, m_tex_diffuse);
@@ -97,6 +100,7 @@ MeshOPRoom::MeshOPRoom(QString objectName) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glGenTextures(1, &m_tex_specular);
     glBindTexture(GL_TEXTURE_2D, m_tex_specular);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img_specular.width(), img_specular.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img_specular.bits());
@@ -104,9 +108,18 @@ MeshOPRoom::MeshOPRoom(QString objectName) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glGenTextures(1, &m_tex_normal);
     glBindTexture(GL_TEXTURE_2D, m_tex_normal);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img_normal.width(), img_normal.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img_normal.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glGenTextures(1, &m_tex_emission);
+    glBindTexture(GL_TEXTURE_2D, m_tex_emission);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img_emission.width(), img_emission.height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, img_emission.bits());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -121,6 +134,7 @@ MeshOPRoom::~MeshOPRoom() {
     glDeleteTextures(1, &m_tex_diffuse);
     glDeleteTextures(1, &m_tex_specular);
     glDeleteTextures(1, &m_tex_normal);
+    glDeleteTextures(1, &m_tex_emission);
     glDeleteBuffers(1, &m_vbo);
     glDeleteBuffers(1, &m_ibo);
 }
@@ -216,6 +230,8 @@ void MeshOPRoom::draw(const QMatrix4x4 &view, const QMatrix4x4 &proj, const QVec
     glBindTexture(GL_TEXTURE_2D, m_tex_normal);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, m_tex_specular);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, m_tex_emission);
 
     m_prog->bind();
     m_prog->setUniformValue(0, m_model);
@@ -223,8 +239,13 @@ void MeshOPRoom::draw(const QMatrix4x4 &view, const QMatrix4x4 &proj, const QVec
     m_prog->setUniformValue(2, proj);
     m_prog->setUniformValue(3, m_model.inverted().transposed());
 
-    m_prog->setUniformValue(8, QVector3D(0,0,0));
     m_prog->setUniformValue(9, viewPos);
+
+    // Light 1
+    m_prog->setUniformValue(10, QVector3D(1.0,1.71,1.67));
+    // Light 2
+    m_prog->setUniformValue(11, QVector3D(1.55,2.0,-1.22));
+
 
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
