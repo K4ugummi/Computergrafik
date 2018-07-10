@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setOption(QSurfaceFormat::DeprecatedFunctions);
     format.setOption(QSurfaceFormat::DebugContext);
+    format.setSamples(4);
     QSurfaceFormat::setDefaultFormat(format);
 
     QApplication a(argc, argv);

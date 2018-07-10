@@ -1,7 +1,7 @@
 #ifndef LIGHTS_H
 #define LIGHTS_H
 
-#define NUM_LIGHTS 5
+#define NUM_LIGHTS 2
 
 #include <QVector3D>
 
@@ -22,5 +22,7 @@ struct LightSource {
     float quadratic;
     float pad3;
 };
+
+
 
 #endif // LIGHTS_H

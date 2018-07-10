@@ -29,6 +29,7 @@ struct PointLight {
 layout (location = 0) in vec3 vFragPos;
 layout (location = 1) in vec3 vNormal;
 layout (location = 2) in vec2 vUV;
+layout (location = 3) in int vIsRender;
 
 layout (location = 7) uniform sampler2D tex0;
 layout (location = 8) uniform vec3 uViewPos;
@@ -62,7 +63,7 @@ vec3 calcPhongLight(PointLight light, vec3 viewDir, vec3 lightDir) {
             + light.quadratic * distance * distance;
     float luminosity = 1.0f / attenuation;
 
-    return((ambient + diffuse + specular) * light.color);
+    return((ambient + diffuse + specular) * luminosity * light.color);
 }
 
 void main() {
@@ -72,10 +73,13 @@ void main() {
 
     // Calculate phong illumination for every light in UBO.
     vec3 phongLighting = vec3(0.0f);
-    //for (int i = 0; i < 5; i++) {
-        vec3 lightDir = normalize(lights[2].position - vFragPos);
-        phongLighting += calcPhongLight(lights[2], viewDir, lightDir);
-    //}
+    for (int i = 0; i < 5; i++) {
+        vec3 lightDir = normalize(lights[i].position - vFragPos);
+        phongLighting += calcPhongLight(lights[i], viewDir, lightDir);
+    }
 
-    gl_FragColor = vec4(phongLighting, 1.0f);
+    if (vIsRender == 1)
+        gl_FragColor = vec4(phongLighting, 1.0f);
+    else
+        gl_FragColor = vec4(phongLighting, 0.0f);
 }

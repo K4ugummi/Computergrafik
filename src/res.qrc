@@ -2,10 +2,7 @@
     <qresource prefix="/">
         <file>shader/sample.frag</file>
         <file>shader/sample.vert</file>
-        <file>textures/sample_texture.jpg</file>
         <file>shader/sample_texture.frag</file>
-        <file>models/sphere.obj</file>
-        <file>textures/gimbal_wood.jpg</file>
         <file>shader/skybox.frag</file>
         <file>shader/skybox.vert</file>
         <file>textures/skybox/back.jpg</file>
@@ -16,9 +13,32 @@
         <file>textures/skybox/top.jpg</file>
         <file>shader/phong.frag</file>
         <file>shader/phong.vert</file>
-        <file>models/gimbal.obj</file>
-        <file>models/gimbal_highres.obj</file>
         <file>shader/light.frag</file>
         <file>shader/light.vert</file>
+        <file>shader/oproom.frag</file>
+        <file>shader/oproom.vert</file>
+        <file>objects/chair.obj</file>
+        <file>textures/chair_diffuse_2k.jpg</file>
+        <file>textures/chair_normal_2k.jpg</file>
+        <file>textures/chair_specular_2k.jpg</file>
+        <file>objects/floor.obj</file>
+        <file>objects/wall.obj</file>
+        <file>textures/floor_diffuse_2k.jpg</file>
+        <file>textures/floor_normal_2k.jpg</file>
+        <file>textures/wall_diffuse_2k.jpg</file>
+        <file>textures/wall_specular_2k.jpg</file>
+        <file>textures/floor_specular_2k.jpg</file>
+        <file>textures/wall_normal_2k.jpg</file>
+        <file>objects/lamp.obj</file>
+        <file>textures/lamp_diffuse_2k.jpg</file>
+        <file>textures/lamp_specular_2k.jpg</file>
+        <file>objects/lamproof.obj</file>
+        <file>textures/lamproof_diffuse_2k.jpg</file>
+        <file>textures/lamproof_normal_2k.jpg</file>
+        <file>textures/lamproof_specular_2k.jpg</file>
+        <file>objects/roof.obj</file>
+        <file>textures/roof_diffuse_2k.jpg</file>
+        <file>textures/roof_normal_2k.jpg</file>
+        <file>textures/roof_specular_2k.jpg</file>
     </qresource>
 </RCC>

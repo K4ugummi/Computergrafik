@@ -4,8 +4,8 @@
 
 Camera::Camera() {
     m_isModShift = m_isArcball = false;
-    m_position = QVector3D(0, 0, -4);
-    m_viewMat.lookAt(m_position, QVector3D(0, 0, 0), QVector3D(0, 1, 0));
+    m_position = QVector3D(-2, 1.5, -3);
+    m_viewMat.lookAt(m_position, QVector3D(0, 1, 0), QVector3D(0, 1, 0));
 }
 
 Camera::~Camera() {
@@ -90,15 +90,21 @@ void Camera::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void Camera::mousePressEvent(QMouseEvent * event) {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::MiddleButton) {
         m_lastMousePos = m_curMousePos = event->pos();
         m_isArcball = true;
+    }
+    else if (event->button() == Qt::LeftButton) {
+        m_isPOV = true;
     }
 }
 
 void Camera::mouseReleaseEvent(QMouseEvent * event) {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::MiddleButton) {
         m_isArcball = false;
+    }
+    else if (event->button() == Qt::LeftButton) {
+        m_isPOV = false;
     }
 }
 

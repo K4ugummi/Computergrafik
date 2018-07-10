@@ -5,9 +5,8 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
 
-#include "mesh.h"
+#include "meshoproom.h"
 #include "skybox.h"
-#include "lights.h"
 #include "camera.h"
 
 #include <QOpenGLShaderProgram>
@@ -45,20 +44,12 @@ private:
     QOpenGLDebugLogger * m_debuglogger;
 
     Skybox * m_skybox;
-    std::vector<Mesh*> m_meshes;    // Gimbal
-    Mesh * m_ball;                  // Ball
+    std::vector<MeshOPRoom*> m_meshes;
 
-    QOpenGLShaderProgram * m_prog, * m_prog_texture, * m_prog_phong;
-    LightSource m_lightSource[NUM_LIGHTS];
-    GLuint m_uboLights;
+    QOpenGLShaderProgram * m_prog;
 
     void initParam();
     void initGLDebugger();
-    void initLights();
-
-    void animateGimbal(float deltaTime);
-    void animateBall(float deltaTime);
-    void rotateGimbal();
 
 protected:
     void initializeGL();

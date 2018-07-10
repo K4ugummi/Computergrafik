@@ -30,6 +30,8 @@
 #define ML_VERTPOS_COUNT 3
 #define ML_NORMAL_COUNT 3
 #define ML_TEXCOOR_COUNT 2
+#define ML_TANGENT_COUNT 3
+#define ML_BITANGENT_COUNT 3
 
 
 class ModelLoader
@@ -77,9 +79,11 @@ public:
         // and generating normals, if necessary
         scene = importer.ReadFileFromMemory((void*)buffer,
                                             (size_t)len,
-                                            aiProcess_Triangulate
+                                            aiProcess_CalcTangentSpace
+                                            | aiProcess_Triangulate
                                             | aiProcess_JoinIdenticalVertices
-                                            | aiProcess_GenSmoothNormals,
+                                            | aiProcess_GenUVCoords,
+                                            //| aiProcess_GenSmoothNormals,
                                             ext.constData());
 
         // Free memory
@@ -107,7 +111,7 @@ public:
     // Generates a VBO with v1.x, v1.y, v1.z, v1.w, v2.x, ...
     void genSimpleVBO(GLfloat* vbo, unsigned int meshId = 0) const
     {
-        return genVBO(vbo, meshId, false, false);
+        return genVBO(vbo, meshId, false, false, false);
     }
 
     // Generates a VBO with
@@ -115,7 +119,7 @@ public:
     // Note: Querying length and then writing data into pointer works for
     // both std::vector + glBufferData as well as
     // glMapBuffer + glUnmapBuffer
-    void genVBO(GLfloat* vbo, unsigned int meshId = 0, bool normals = true, bool texcoords = true) const
+    void genVBO(GLfloat* vbo, unsigned int meshId = 0, bool normals = true, bool texcoords = true, bool tangents = true) const
     {
         assertHasScene();
 
@@ -131,6 +135,10 @@ public:
         if (texcoords) {
             assert(mesh->HasTextureCoords(0));
             stride += ML_TEXCOOR_COUNT;
+        }
+        if (tangents) {
+            assert(mesh->HasTangentsAndBitangents());
+            stride += (ML_TANGENT_COUNT + ML_BITANGENT_COUNT);
         }
 
         // copy array and DON'T add 4th component
@@ -151,6 +159,15 @@ public:
                 /* TODO: auto-selects first UV(W) channel */
                 vbo[i*stride+n++] = (mesh->mTextureCoords[0])[i].x;
                 vbo[i*stride+n++] = (mesh->mTextureCoords[0])[i].y;
+            }
+            if (tangents) {
+                vbo[i*stride+n++] = mesh->mTangents[i].x;
+                vbo[i*stride+n++] = mesh->mTangents[i].y;
+                vbo[i*stride+n++] = mesh->mTangents[i].z;
+
+                vbo[i*stride+n++] = mesh->mBitangents[i].x;
+                vbo[i*stride+n++] = mesh->mBitangents[i].y;
+                vbo[i*stride+n++] = mesh->mBitangents[i].z;
             }
         }
     }
@@ -175,10 +192,10 @@ public:
     // These return the complete expected length of the buffer object
     unsigned int lengthOfSimpleVBO(unsigned int meshId = 0) const
     {
-        return lengthOfVBO(meshId, false, false);
+        return lengthOfVBO(meshId, false, false, false);
     }
 
-    unsigned int lengthOfVBO(unsigned int meshId = 0, bool normals = true, bool texcoords = true) const
+    unsigned int lengthOfVBO(unsigned int meshId = 0, bool normals = true, bool texcoords = true, bool tangents = true) const
     {
         assertHasScene();
 
@@ -193,6 +210,10 @@ public:
         if (texcoords) {
             assert(mesh->HasTextureCoords(0));
             res += mesh->mNumVertices * ML_TEXCOOR_COUNT;
+        }
+        if (tangents) {
+            assert(mesh->HasTangentsAndBitangents());
+            res += mesh->mNumVertices * (ML_TANGENT_COUNT + ML_BITANGENT_COUNT);
         }
         return res;
     }

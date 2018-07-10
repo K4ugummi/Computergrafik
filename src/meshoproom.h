@@ -2,8 +2,8 @@
 // Autor: Stephan Schauerte
 // Matrikelnummer: 3099441
 
-#ifndef MY_MESH_H
-#define MY_MESH_H
+#ifndef MY_MESHOPROOM_H
+#define MY_MESHOPROOM_H
 
 #include "vertex.h"
 #include "material.h"
@@ -15,7 +15,7 @@
 #include <QOpenGLFunctions_4_3_Core>
 #include <QImage>
 
-class Mesh : QOpenGLFunctions_4_3_Core {
+class MeshOPRoom : QOpenGLFunctions_4_3_Core {
 private:
     std::vector<Vertex> m_vertices;
     std::vector<GLuint> m_indices;
@@ -23,8 +23,9 @@ private:
     GLuint m_vao;   // Vertex Array Object
     GLuint m_vbo;   // Vertex Buffer Object
     GLuint m_ibo;   // Index Buffer Object
-
-    GLuint m_tex;   // Textures
+    GLuint m_tex_diffuse;   // Texture
+    GLuint m_tex_specular;
+    GLuint m_tex_normal;
 
     // Additional Color that is multiplied with the texture.
     // Set to (1.0f, 1.0f, 1.0f) for texture only
@@ -41,8 +42,8 @@ private:
 
 protected:
 public:
-    Mesh(QString filepath);
-    ~Mesh();
+    MeshOPRoom(QString filepath);
+    ~MeshOPRoom();
 
     void setProgram(QOpenGLShaderProgram * prog);
     void setColor(QVector3D color);
